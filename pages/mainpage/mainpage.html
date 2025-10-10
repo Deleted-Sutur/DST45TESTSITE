@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>dst45TestSite - Главная</title>
+    <meta name="description" content="Изучите основы веб-типографики. Шрифты, иерархия, читаемость и современные технологии для вашего сайта.">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1.5.10/css/pico.min.css">
+    <style>
+        :root {
+            --typography-primary: #0066cc;
+            --typography-secondary: #333333;
+            --typography-light: #666666;
+        }
+
+        *{
+            margin:0;
+            padding:0;
+        }
+
+          nav.container-fluid {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        /* Бургер-кнопка */
+        .burger-btn {
+            display: none;
+            flex-direction: column;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0.5rem;
+            margin: 0;
+        }
+
+        .burger-line {
+            width: 24px;
+            height: 2px;
+            background: var(--pico-color);
+            margin: 2px 0;
+            transition: 0.3s;
+            border-radius: 1px;
+        }
+
+        /* Мобильное меню */
+        .mobile-menu {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: var(--pico-background-color);
+            transform: translateX(-100%);
+            transition: transform 0.3s ease-in-out;
+            z-index: 999;
+            padding: 2rem;
+            box-shadow: var(--pico-card-box-shadow);
+        }
+
+        .mobile-nav-list {
+            list-style: none;
+            padding: 0;
+            margin: 4rem 0 0 0;
+        }
+
+        .mobile-nav-item {
+            margin-bottom: 1rem;
+        }
+
+        .mobile-nav-link {
+            display: block;
+            padding: 1rem 0;
+            border-bottom: 1px solid var(--pico-muted-border-color);
+            text-decoration: none;
+            color: var(--pico-color);
+            font-size: 1.1rem;
+            transition: color 0.3s ease;
+        }
+
+        .mobile-nav-link:hover {
+            color: var(--pico-primary);
+            background: none;
+        }
+
+        /* Активные состояния */
+        .mobile-menu.active {
+            transform: translateX(0);
+        }
+
+        .burger-btn.active .burger-line:nth-child(1) {
+            transform: rotate(45deg) translate(6px, 6px);
+        }
+
+        .burger-btn.active .burger-line:nth-child(2) {
+            opacity: 0;
+        }
+
+        .burger-btn.active .burger-line:nth-child(3) {
+            transform: rotate(-45deg) translate(6px, -6px);
+        }
+
+        /* Оверлей */
+        .mobile-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            opacity: 0;
+            visibility: hidden;
+            transition: 0.3s;
+            z-index: 998;
+        }
+
+        .mobile-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Адаптивность */
+        @media (max-width: 768px) {
+            .burger-btn {
+                display: flex;
+            }
+
+            .desktop-menu {
+                display: none;
+            }
+        }
+        
+        .headtext {
+            padding: 4rem 1rem;
+            text-align: center;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            margin-bottom: 3rem;
+        }
+        
+        .headtext h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--typography-secondary);
+            line-height: 1.1;
+        }
+        
+        .headtext p {
+            font-size: 1.4rem;
+            color: var(--typography-light);
+            max-width: 800px;
+            margin: 0 auto 2rem;
+            line-height: 1.6;
+        }
+        
+        .demo-section {
+            padding: 3rem 4rem;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            margin: 3rem 0;
+        }
+
+        .demo-section h2 {
+            margin-bottom: 1rem;
+            color: var(--typography-secondary);
+            line-height: 1.1;
+        }
+
+        .demo-section p {
+            color: var(--typography-light);
+            line-height: 1.6;
+        }
+        
+        .demo-comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+        
+        @media (max-width: 768px) {
+            .demo-comparison {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .demo-bad, .demo-good {
+            padding: 2rem;
+            border-radius: 8px;
+            min-height: 200px;
+        }
+        
+        .demo-bad {
+            background-color: #fff;
+            border: 2px solid #ff6b6b;
+        }
+        
+        .demo-good {
+            background-color: #fff;
+            border: 2px solid #51cf66;
+        }
+        
+        .demo-bad h3 {
+            font-family: "Comic Sans MS", cursive;
+            font-size: 1.8rem;
+            color: #ff6b6b;
+            line-height: 1;
+            margin-bottom: 1rem;
+        }
+        
+        .demo-good h3 {
+            font-family: "Georgia", serif;
+            font-size: 2rem;
+            color: #2b8a3e;
+            line-height: 1.2;
+            margin-bottom: 1rem;
+        }
+        
+        .demo-bad p {
+            font-size: 14px;
+            line-height: 1.2;
+            color: #333;
+            font-family: Arial, sans-serif;
+        }
+        
+        .demo-good p {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            color: #333;
+            font-family: "Helvetica Neue", Arial, sans-serif;
+        }
+        
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+        
+        .feature-card {
+            padding: 1rem;
+            text-align: center;
+            border-radius: 8px;
+            transition: transform 0.3s ease;
+            background: white;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: var(--typography-primary);
+        }
+        
+        .feature-text h3 {
+            flex-grow: 1;
+            color: var(--typography-light);
+            margin-bottom: 1rem;
+        }
+
+        .feature-text p {
+            flex-grow: 1;
+            color: var(--typography-light);
+            margin-bottom: 1rem;
+        }
+        
+        .feature-button {
+            margin-top: auto;
+            margin-bottom: 1rem;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 2rem 1rem;
+            margin-top: 3rem;
+            border-top: 1px solid #dee2e6;
+            color: var(--typography-light);
+        }
+    </style>
+</head>
+<body>
+     <nav class="container-fluid">
+            <ul>
+                <li><a href="../mainpage/mainpage.html"><strong>dst45TestSite</strong></a></li>
+            </ul>
+            
+            <ul>
+                <li><a href="../fundamentum/fundamentum.html">Основы</a></li>
+                <li><a href="../practice/practice.html">Практика</a></li>
+                <li><a href="../resourses/resourses.html">Ресурсы</a></li>
+            </ul>
+
+            <!-- Бургер-кнопка -->
+            <button class="burger-btn" id="burgerButton">
+                <span class="burger-line"></span>
+                <span class="burger-line"></span>
+                <span class="burger-line"></span>
+            </button>
+    </nav>
+
+    <!-- Мобильное меню -->
+    <div class="mobile-menu" id="mobileMenu">
+        <ul class="mobile-nav-list">
+            <li class="mobile-nav-item">
+                <a href="../mainpage/mainpage.html" class="mobile-nav-link">Главная</a>
+            </li>
+            <li class="mobile-nav-item">
+                <a href="../fundamentum/fundamentum.html" class="mobile-nav-link">Основы</a>
+            </li>
+            <li class="mobile-nav-item">
+                <a href="../practice/practice.html" class="mobile-nav-link">Практика</a>
+            </li>
+            <li class="mobile-nav-item">
+                <a href="../resourses/resourses.html" class="mobile-nav-link">Ресурсы</a>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Оверлей для мобильного меню -->
+    <div class="mobile-overlay" id="mobileOverlay"></div>
+
+    <main class="container">
+        <section class="headtext">
+            <h1>Типографика — <span style="color: var(--typography-primary);">голос</span> вашего сайта</h1>
+            <p>Искусство веб-типографики превращает обычный текст в мощный инструмент коммуникации. Узнайте, как правильно работать со шрифтами и тому подобным для создания удобных и красивых интерфейсов.</p>
+        </section>
+
+        <section class="demo-section">
+            <h2>Почему это важно?</h2>
+            <p>Сравните два подхода к оформлению текста:</p>
+            
+            <div class="demo-comparison">
+                <div class="demo-bad">
+                    <h3>Плохая типографика</h3>
+                    <p>Этот текст сложно читать из-за неправильного выбора шрифта, маленького размера и недостаточного межстрочного расстояния. Буквы расположены слишком близко, а контраст слабый.</p>
+                    <p>Заголовок плохо выделяется, и вся композиция выглядит непрофессионально.</p>
+                </div>
+                
+                <div class="demo-good">
+                    <h3>Хорошая типографика</h3>
+                    <p>Этот текст легко читается благодаря правильному подбору шрифтовой пары, оптимальному размеру и гармоничному межстрочному расстоянию.</p>
+                    <p>Четкая иерархия помогает ориентироваться в содержании, а приятное оформление улучшает впечатление от сайта.</p>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <h2>Изучите веб-типографику шаг за шагом</h2>
+            <p>Наш гид проведет вас от базовых понятий к продвинутым техникам:</p>
+            <div class="feature-grid">
+                <article class="feature-card">
+                    <div class="feature-icon">A</div>
+                    <div class="feature-text">
+                        <h3>Основы типографики</h3>
+                        <p>Небольшой учебник с основами.</p>
+                    </div>
+                    <div class = "feature-button"><a href="../fundamentum/fundamentum.html" role="button" class="secondary">Читать</a></div>
+                </article>
+                
+                <article class="feature-card">
+                    <div class="feature-icon">🎨</div>
+                    <div class="feature-text">
+                        <h3>Конструктор</h3>
+                        <p>Поэкспериментируйте, а главное наглядно увидьте всё, что прочитали ранее.</p>
+                    </div>
+                    <div class = "feature-button"><a href="../practice/practice.html" role="button" class="secondary">Читать</a></div>
+                </article>
+                
+                <article class="feature-card">
+                    <div class="feature-icon">res</div>
+                    <div class="feature-text">
+                        <h3>Ресурсы</h3>
+                        <p>Ссылки на ресурсы, которые могут быть полезны.</p>
+                    </div>
+                    <div class = "feature-button"><a href="../resourses/resourses.html" role="button" class="secondary">Читать</a></div>
+                </article>
+            </div>
+        </section>
+    </main>
+
+    <footer class="container">
+        <small>© 2025 dst45TestSite</small>
+    </footer>
+
+    <script>
+        class BurgerMenu {
+            constructor() {
+                this.burgerButton = document.getElementById('burgerButton');
+                this.mobileMenu = document.getElementById('mobileMenu');
+                this.overlay = document.getElementById('mobileOverlay');
+                this.navLinks = document.querySelectorAll('.mobile-nav-link');
+                
+                this.init();
+            }
+
+            init() {
+                this.burgerButton.addEventListener('click', () => {
+                    this.toggleMenu();
+                });
+
+                this.overlay.addEventListener('click', () => {
+                    this.closeMenu();
+                });
+
+                this.navLinks.forEach(link => {
+                    link.addEventListener('click', () => {
+                        this.closeMenu();
+                    });
+                });
+
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === 'Escape') {
+                        this.closeMenu();
+                    }
+                });
+
+                window.addEventListener('resize', () => {
+                    if (window.innerWidth > 768) {
+                        this.closeMenu();
+                    }
+                });
+            }
+
+            toggleMenu() {
+                this.burgerButton.classList.toggle('active');
+                this.mobileMenu.classList.toggle('active');
+                this.overlay.classList.toggle('active');
+                
+                document.body.style.overflow = this.mobileMenu.classList.contains('active') ? 'hidden' : '';
+            }
+
+            closeMenu() {
+                this.burgerButton.classList.remove('active');
+                this.mobileMenu.classList.remove('active');
+                this.overlay.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            new BurgerMenu();
+        });
+    </script>
+</body>
+</html>

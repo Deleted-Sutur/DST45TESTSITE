@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Шрифты и их анатомия</title>
+    <meta name="description" content="Изучите основы веб-типографики. Шрифты, иерархия, читаемость и современные технологии для вашего сайта.">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1.5.10/css/pico.min.css">
+    <style>
+        :root {
+            --typography-primary: #0066cc;
+            --typography-secondary: #333333;
+            --typography-light: #666666;
+        }
+
+        *{
+            margin:0;
+            padding:0;
+        }
+
+        /* Стили для навигации и бургер-меню */
+        nav.container-fluid {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        /* Бургер-кнопка */
+        .burger-btn {
+            display: none;
+            flex-direction: column;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0.5rem;
+            margin: 0;
+        }
+
+        .burger-line {
+            width: 24px;
+            height: 2px;
+            background: var(--pico-color);
+            margin: 2px 0;
+            transition: 0.3s;
+            border-radius: 1px;
+        }
+
+        /* Мобильное меню */
+        .mobile-menu {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: var(--pico-background-color);
+            transform: translateX(-100%);
+            transition: transform 0.3s ease-in-out;
+            z-index: 999;
+            padding: 2rem;
+            box-shadow: var(--pico-card-box-shadow);
+        }
+
+        .mobile-nav-list {
+            list-style: none;
+            padding: 0;
+            margin: 4rem 0 0 0;
+        }
+
+        .mobile-nav-item {
+            margin-bottom: 1rem;
+        }
+
+        .mobile-nav-link {
+            display: block;
+            padding: 1rem 0;
+            border-bottom: 1px solid var(--pico-muted-border-color);
+            text-decoration: none;
+            color: var(--pico-color);
+            font-size: 1.1rem;
+            transition: color 0.3s ease;
+        }
+
+        .mobile-nav-link:hover {
+            color: var(--pico-primary);
+            background: none;
+        }
+
+        /* Активные состояния */
+        .mobile-menu.active {
+            transform: translateX(0);
+        }
+
+        .burger-btn.active .burger-line:nth-child(1) {
+            transform: rotate(45deg) translate(6px, 6px);
+        }
+
+        .burger-btn.active .burger-line:nth-child(2) {
+            opacity: 0;
+        }
+
+        .burger-btn.active .burger-line:nth-child(3) {
+            transform: rotate(-45deg) translate(6px, -6px);
+        }
+
+        /* Оверлей */
+        .mobile-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            opacity: 0;
+            visibility: hidden;
+            transition: 0.3s;
+            z-index: 998;
+        }
+
+        .mobile-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Адаптивность */
+        @media (max-width: 768px) {
+            .burger-btn {
+                display: flex;
+            }
+
+            .desktop-menu {
+                display: none;
+            }
+        }
+        
+        .headtext {
+            padding: 4rem 1rem;
+            text-align: center;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            margin-bottom: 3rem;
+        }
+        
+        .headtext h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--typography-secondary);
+            line-height: 1.1;
+        }
+        
+        .headtext p {
+            font-size: 1.4rem;
+            color: var(--typography-light);
+            max-width: 800px;
+            margin: 0 auto 2rem;
+            line-height: 1.6;
+        }
+        
+        @media (max-width: 768px) {
+            .demo-comparison {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .maintext {
+            padding: 4rem;
+            border-radius: 8px;
+            min-height: 200px;
+        }
+        
+        .demo-bad {
+            background-color: #fff;
+            border: 2px solid #ff6b6b;
+        }
+        
+        .maintext {
+            background-color: #fff;
+        }
+        
+        .maintext h3 {
+            font-size: 2rem;
+            color: #333;
+            margin-bottom: 1rem;
+        }
+
+        .maintext pre {
+            color: #ada8ff;
+            margin-bottom: 2rem;
+        }
+
+        .maintext ul {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin: 2rem;
+            list-style: none;
+            color: #333;
+            font-family: "Helvetica Neue", Arial, sans-serif;
+        }
+
+        .maintext ul li {
+            list-style: none;
+            position: relative;
+        }
+
+        .maintext ul li:before {
+            content:  "—";
+            position: absolute;
+            left:     -30px;
+        }
+
+        .maintext ul.in2 li:before {
+            content:  "*";
+            position: absolute;
+            left:     -30px;
+        }
+
+        .maintext h5 {
+            font-size: 1.5rem;
+            color: #333;
+            margin-bottom: 1rem;
+        }
+        
+        .maintext p {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            color: #333;
+            font-family: "Helvetica Neue", Arial, sans-serif;
+            margin-bottom: 0.5rem;
+        }
+
+        ul.in {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-top: 0rem;
+            margin-bottom: 1rem;
+            list-style: none;
+            color: #333;
+            font-family: "Helvetica Neue", Arial, sans-serif;
+        }
+
+        ul.in ul li {
+            list-style: none;
+            margin-top: 0rem;
+            margin-bottom: 0rem;
+            position: relative;
+        }
+
+        ul.in ul li:before {
+            content:  "—";
+            position: absolute;
+            left:     -30px;
+            margin-top: 0rem;
+            margin-bottom: 0rem;
+        }
+
+        ul.in2 {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-top: 0rem;
+            margin-bottom: 1rem;
+            list-style: none;
+            color: #333;
+            font-family: "Helvetica Neue", Arial, sans-serif;
+        }
+
+        ul.in2 ul li {
+            list-style: none;
+            margin-top: 0rem;
+            margin-bottom: 0rem;
+            position: relative;
+        }
+
+        ul.in2 ul li:before {
+            content:  "*";
+            position: absolute;
+            left:     -30px;
+            margin-top: 0rem;
+            margin-bottom: 0rem;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 2rem 1rem;
+            margin-top: 3rem;
+            border-top: 1px solid #dee2e6;
+            color: var(--typography-light);
+        }
+
+        .simple-sidebar {
+        position: sticky;
+        top: 5rem;
+        max-width: 350px;
+        background: var(--pico-background-color);
+        padding: 0.5rem;
+        border-radius: 2px;
+        margin-bottom: -16rem;
+        border: 1px solid var(--pico-muted-border-color);
+    }
+
+    .simple-sidebar h4 {
+        margin-top: 0;
+        color: var(--pico-primary);
+        border-bottom: 2px solid var(--pico-primary);
+        padding-bottom: 0.5rem;
+    }
+
+    .simple-sidebar ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .simple-sidebar li {
+        margin-bottom: 0.5rem;
+    }
+
+    .simple-sidebar a {
+        text-decoration: none;
+        color: var(--pico-color);
+        padding: 0.5rem;
+        display: block;
+        border-radius: 4px;
+        transition: background 0.3s ease;
+    }
+
+    .simple-sidebar a:hover {
+        background: var(--pico-primary);
+        color: white;
+    }
+    </style>
+</head>
+<body>
+     <nav class="container-fluid">
+            <ul>
+                <li><a href="../../mainpage/mainpage.html"><strong>dst45TestSite</strong></a></li>
+            </ul>
+            
+            <ul>
+                <li><a href="../../fundamentum/fundamentum.html">Основы</a></li>
+                <li><a href="../../practice/practice.html">Практика</a></li>
+                <li><a href="../../resourses/resourses.html">Ресурсы</a></li>
+            </ul>
+
+            <button class="burger-btn" id="burgerButton">
+                <span class="burger-line"></span>
+                <span class="burger-line"></span>
+                <span class="burger-line"></span>
+            </button>
+    </nav>
+
+    <div class="mobile-menu" id="mobileMenu">
+        <ul class="mobile-nav-list">
+            <li class="mobile-nav-item">
+                <a href="../../mainpage/mainpage.html" class="mobile-nav-link">Главная</a>
+            </li>
+            <li class="mobile-nav-item">
+                <a href="../../fundamentum/fundamentum.html" class="mobile-nav-link">Основы</a>
+            </li>
+            <li class="mobile-nav-item">
+                <a href="../../practice/practice.html" class="mobile-nav-link">Практика</a>
+            </li>
+            <li class="mobile-nav-item">
+                <a href="../../resourses/resourses.html" class="mobile-nav-link">Ресурсы</a>
+            </li>
+        </ul>
+    </div>
+
+    <div class="mobile-overlay" id="mobileOverlay"></div>
+
+    <aside class="simple-sidebar">
+    <nav>
+        <ul>
+            <li><a href="#howitworks">Как это работает? Технология @font-face</a></li>
+            <li><a href="#webfontsformat">Форматы веб-шрифтов — Эволюция в действии</a></li>
+            <li><a href="#webfontsconnection">Способы подключения веб-шрифтов</a></li>
+            <li><a href="#performance">Критически важный вопрос: Производительность</a></li>
+            <li><a href="#conclusion">Заключение</a></li>
+        </ul>
+    </nav>
+</aside>
+
+    <main class="container">
+        <section class="headtext">
+            <h1>Веб-шрифты: Полное руководство по современной типографике в браузере</h1>
+            <p>Веб-шрифты совершили тихую революцию в дизайне. Всего 15 лет назад дизайнеры были ограничены горсткой «безопасных» шрифтов, таких как Arial, Georgia и Verdana. Сегодня интернет пестрит разнообразием типографики, и все благодаря технологии, которая позволила загружать и использовать любые шрифты прямо на веб-страницах.</p>
+        </section>
+        <section class="maintext">
+            <h3 id="howitworks">Как это работает? Технология @font-face</h3>
+            <p>Основой всей современной веб-типографики является CSS-правило @font-face. Оно действует как мост между вашим сервером (или сторонним) и браузером пользователя, сообщая последнему, где найти файлы шрифтов и как их применять.</p>
+            <h5>Базовый синтаксис:</h5>
+            <pre>
+
+    @font-face {
+      font-family: 'My Beautiful Font'; /* Придумываем имя для шрифта */
+      src: url('myfont.woff2') format('woff2'), /* Указываем путь и формат */
+           url('myfont.woff') format('woff');
+      font-weight: 400; /* Указываем насыщенность, которую представляет этот файл */
+      font-style: normal; /* Указываем стиль */
+      font-display: swap; /* Стратегия отображения */
+    }
+    
+    body {
+      font-family: 'My Beautiful Font', sans-serif; /* Используем шрифт */
+    }
+
+</pre>
+            <p></p>
+            <h3 id="webfontsformat">Форматы веб-шрифтов — Эволюция в действии</h3>
+            <p>За годы существования веб-шрифтов сформировалось несколько форматов, но сегодня главенствуют два:</p>
+            <ul class="in">
+                <li>WOFF2 (Web Open Font Format 2): Король современных браузеров. Это формат с наилучшим сжатием без потерь (на 30% лучше, чем WOFF). Поддерживается всеми современными браузерами, рекомендуется всегда использовать WOFF2 как основной формат.</li>
+                <li>WOFF (Web Open Font Format): Предшественник WOFF2. Хорошее сжатие, широкая поддержка. Используется как фолбэк для очень старых браузеров, которые не поддерживают WOFF2.</li>
+            </ul>
+            <p>Существуют несколько устаревших форматов: TTF/OTF (TrueType / OpenType. Исходные файлы шрифтов. Они больше по размеру, поэтому их подключение напрямую нежелательно) и EOT (Embedded OpenType. Создан для старых версий IE. Сегодня практически не актуален)</p>
+            <p></p>
+            <h3 id="webfontsconnection">Способы подключения веб-шрифтов</h3>
+            <p>На практике шрифты подключают двумя основными способами: <br>
+             1) Сторонние сервисы (Google Fonts, Adobe Fonts)</p>
+            <ul class="in">
+                <li>Плюсы: Невероятно просто использовать (достаточно вставить строку кода), не нужно беспокоиться о хостинге, лицензиях и кешировании.
+                </li>
+                <li>Минусы: Вопросы конфиденциальности (сервис получает данные о посетителях), зависимость от стороннего ресурса (если сервис «упал», ваши шрифты перестанут работать).</li>
+            </ul>
+            <p> 2) СамоХостинг (Self-Hosting)
+            <ul class="in">
+                <li>Плюсы: Полный контроль над шрифтами, максимальная производительность (можно тонко настроить загрузку), конфиденциальность данных.</li>
+                <li>Минусы: Нужно иметь права на веб-лицензию шрифта, самостоятельно оптимизировать и загружать файлы на свой сервер.</li>
+            </ul>
+            <p></p>
+            <h3 id="performance">Критически важный вопрос: Производительность</h3>
+            <p>Шрифты — это ресурсы, которые браузер должен скачать. Неоптимизированная загрузка может привести к ряду проблем:</p>
+            <ul class="in">
+                <li>FOIT (Flash of Invisible Text): Браузер скрывает текст, пока не загрузит шрифт. Пользователь может несколько секунд видеть пустую страницу.</li>
+                <li>FOUT (Flash of Unstyled Text): Браузер сначала показывает текст системным шрифтом, а потом резко меняет его на кастомный. Визуально неприятно.</li>
+            </ul>
+            <h5>Как с этим бороться?</h5>
+            <ul class="in">
+                <li>Стратегия font-display. Самое важное свойство в @font-face. Оно говорит браузеру, как вести себя при загрузке шрифта. <br>
+                    * font-display: swap; — Наиболее популярный выбор. Браузер сразу показывает текст системным шрифтом, а затем подменяет его на кастомный после загрузки. Это предотвращает FOIT, но создает FOUT. <br>
+                    * font-display: optional; — Более строгая стратегия. Если шрифт не загрузился за короткое время (примерно 100 мс), браузер использует системный и больше не будет его подменять. Идеально для медленных соединений.</li>
+                <li>Предзагрузка. Если шрифт критически важен для отображения страницы (например, для заголовка), его можно предзагрузить в самом начале.</li>
+                <li>Подзагрузка подмножеств. Многие сервисы и инструменты (например, glyphhanger) позволяют вырезать из шрифта только те символы, которые вы используете (например, только кириллицу и латиницу, без редко используемых символов). Это радикально уменьшает размер файла.</li>
+            </ul>
+            <p></p>
+            <h3 id="conclusion">Заключение</h3>
+            <p>Веб-шрифты превратили интернет из типографической пустыни в цветущий сад. Но с большой силой приходит и большая ответственность. Современный веб-дизайнер и разработчик должен не только уметь выбирать красивые шрифты, но и владеть инструментами для их оптимизации — понимать форматы, стратегии загрузки и потенциал переменных шрифтов. <br>
+            Правильно реализованные веб-шрифты — это не просто украшение. Это фундаментальный компонент пользовательского опыта, брендинга и, в конечном счете, доступности и удобства вашего сайта.</p>
+        </section>
+        <a href="../../fundamentum/fundamentum.html"><button>В основной раздел</button></a>
+        <a href="../variablefonts/variablefonts.html"><button>К следующей статье</button></a>
+        <a href="../readable/readable.html"><button>К предыдущей статье</button></a>
+    </main>
+
+    <footer class="container">
+        <small>© 2025 dst45TestSite</small>
+    </footer>
+
+    <script>
+        // Бургер-меню
+        class BurgerMenu {
+            constructor() {
+                this.burgerButton = document.getElementById('burgerButton');
+                this.mobileMenu = document.getElementById('mobileMenu');
+                this.overlay = document.getElementById('mobileOverlay');
+                this.navLinks = document.querySelectorAll('.mobile-nav-link');
+                
+                this.init();
+            }
+
+            init() {
+                // Обработчик клика по бургер-кнопке
+                this.burgerButton.addEventListener('click', () => {
+                    this.toggleMenu();
+                });
+
+                // Обработчик клика по оверлею
+                this.overlay.addEventListener('click', () => {
+                    this.closeMenu();
+                });
+
+                // Обработчики клика по ссылкам меню
+                this.navLinks.forEach(link => {
+                    link.addEventListener('click', () => {
+                        this.closeMenu();
+                    });
+                });
+
+                // Закрытие меню при нажатии Escape
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === 'Escape') {
+                        this.closeMenu();
+                    }
+                });
+
+                // Закрытие меню при изменении размера окна на десктоп
+                window.addEventListener('resize', () => {
+                    if (window.innerWidth > 768) {
+                        this.closeMenu();
+                    }
+                });
+            }
+
+            toggleMenu() {
+                this.burgerButton.classList.toggle('active');
+                this.mobileMenu.classList.toggle('active');
+                this.overlay.classList.toggle('active');
+                
+                // Блокировка скролла тела страницы
+                document.body.style.overflow = this.mobileMenu.classList.contains('active') ? 'hidden' : '';
+            }
+
+            closeMenu() {
+                this.burgerButton.classList.remove('active');
+                this.mobileMenu.classList.remove('active');
+                this.overlay.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+        }
+
+        // Инициализация бургер-меню при загрузке DOM
+        document.addEventListener('DOMContentLoaded', () => {
+            new BurgerMenu();
+        });
+    </script>
+</body>
+</html>

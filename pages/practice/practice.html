@@ -1,0 +1,906 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Конструктор типографики</title>
+    <meta name="description" content="Тренажёр для экспериментов с веб-типографикой">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1.5.10/css/pico.min.css">
+    <!-- Увы не всё работает. В предпросмотре не меняются заголовки. Вообще. -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:slnt,wght@-10..0,100..900&family=Roboto+Flex:opsz,slnt,wdth,wght,GRAD,XTRA,YOPQ,YTAS,YTDE,YTFI,YTLC,YTUC@8..144,-10..0,25..151,100..1000,-200..150,323..603,25..135,649..854,-305..-98,560..788,416..570,528..760&family=Source+Serif+4:opsz,wght@8..60,200..900&family=Roboto:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Source+Sans+3:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #0066cc;
+            --secondary: #333333;
+            --light: #666666;
+        }
+
+        nav.container-fluid {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        /* Бургер-кнопка */
+        .burger-btn {
+            display: none;
+            flex-direction: column;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0.5rem;
+            margin: 0;
+        }
+
+        .burger-line {
+            width: 24px;
+            height: 2px;
+            background: var(--pico-color);
+            margin: 2px 0;
+            transition: 0.3s;
+            border-radius: 1px;
+        }
+
+        /* Мобильное меню */
+        .mobile-menu {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: var(--pico-background-color);
+            transform: translateX(-100%);
+            transition: transform 0.3s ease-in-out;
+            z-index: 999;
+            padding: 2rem;
+            box-shadow: var(--pico-card-box-shadow);
+        }
+
+        .mobile-nav-list {
+            list-style: none;
+            padding: 0;
+            margin: 4rem 0 0 0;
+        }
+
+        .mobile-nav-item {
+            margin-bottom: 1rem;
+        }
+
+        .mobile-nav-link {
+            display: block;
+            padding: 1rem 0;
+            border-bottom: 1px solid var(--pico-muted-border-color);
+            text-decoration: none;
+            color: var(--pico-color);
+            font-size: 1.1rem;
+            transition: color 0.3s ease;
+        }
+
+        .mobile-nav-link:hover {
+            color: var(--pico-primary);
+            background: none;
+        }
+
+        /* Активные состояния */
+        .mobile-menu.active {
+            transform: translateX(0);
+        }
+
+        .burger-btn.active .burger-line:nth-child(1) {
+            transform: rotate(45deg) translate(6px, 6px);
+        }
+
+        .burger-btn.active .burger-line:nth-child(2) {
+            opacity: 0;
+        }
+
+        .burger-btn.active .burger-line:nth-child(3) {
+            transform: rotate(-45deg) translate(6px, -6px);
+        }
+
+        /* Оверлей */
+        .mobile-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            opacity: 0;
+            visibility: hidden;
+            transition: 0.3s;
+            z-index: 998;
+        }
+
+        .mobile-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .typography-trainer {
+            padding: 2rem;
+            border-radius: 8px;
+            min-height: 200px;
+            background-color: #fff;
+        }
+
+        .typography-trainer h1 {
+            font-size: 2.5rem;
+            color: #333;
+            margin-bottom: 1rem;
+        }
+
+        .typography-trainer h3 {
+            font-size: 2rem;
+            color: #333;
+            margin-bottom: 1rem;
+        }
+
+        .typography-trainer p {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            color: #333;
+            font-family: "Helvetica Neue", Arial, sans-serif;
+            margin-bottom: 0.5rem;
+        }
+
+        .typography-trainer h4 {
+            font-size: 1.5rem;
+            color: #333;
+            margin-bottom: 1rem;
+        }
+
+        .controls-panel {
+            background: var(--pico-background-color);
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+
+        .preview-area {
+            background: white;
+            padding: 3rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+            min-height: 400px;
+            border: 2px dashed #e9ecef;
+            transition: all 0.3s ease;
+        }
+
+        .preview-area.updating {
+            background: #f8f9fa;
+            border-color: var(--primary);
+        }
+
+        .control-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .control-group h4 {
+            margin-bottom: 0.5rem;
+            color: var(--secondary);
+            border-bottom: 1px solid #dee2e6;
+            padding-bottom: 0.5rem;
+        }
+
+        .slider-container {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .slider-container label {
+            min-width: 120px;
+            font-size: 0.9rem;
+        }
+
+        .slider-value {
+            min-width: 40px;
+            text-align: center;
+            font-weight: bold;
+            color: var(--primary);
+        }
+
+        input[type="range"] {
+            flex: 1;
+        }
+
+        .font-selector {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            color: #333;
+            margin-bottom: 1rem;
+        }
+
+        .font-option {
+            padding: 1rem;
+            border: 2px solid #dee2e6;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .font-option:hover {
+            border-color: var(--primary);
+            background: #f8f9fa;
+        }
+
+        .font-option.active {
+            border-color: var(--primary);
+            background: var(--primary);
+            color: white;
+        }
+
+        .variable-controls {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 6px;
+            margin-top: 1rem;
+            border-left: 4px solid var(--primary);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin-top: 1rem;
+        }
+
+        .demo-heading {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+        }
+
+        .demo-subheading {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--light);
+        }
+
+        .demo-body {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .demo-caption {
+            font-size: 0.9rem;
+            color: var(--light);
+            font-style: italic;
+        }
+
+        .css-output {
+            background: #1a1a1a;
+            color: #00ff00;
+            padding: 1.5rem;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            white-space: pre-wrap;
+            margin-top: 2rem;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .reset-button {
+            background: #dc3545;
+            border-color: #dc3545;
+        }
+
+        .reset-button:hover {
+            background: #c82333;
+            border-color: #bd2130;
+        }
+
+        .update-button {
+            background: var(--primary);
+            border-color: var(--primary);
+        }
+
+        .status-message {
+            padding: 0.5rem;
+            border-radius: 4px;
+            margin-top: 0.5rem;
+            font-size: 0.9rem;
+            text-align: center;
+        }
+
+        .status-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .status-info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+
+        @media (max-width: 768px) {
+            .font-selector {
+                grid-template-columns: 1fr;
+            }
+            
+            .slider-container {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .slider-container label {
+                min-width: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="container-fluid">
+            <ul>
+                <li><a href="../mainpage/mainpage.html"><strong>dst45TestSite</strong></a></li>
+            </ul>
+            
+            <ul>
+                <li><a href="../fundamentum/fundamentum.html">Основы</a></li>
+                <li><a href="../practice/practice.html">Практика</a></li>
+                <li><a href="../resourses/resourses.html">Ресурсы</a></li>
+            </ul>
+
+            <button class="burger-btn" id="burgerButton">
+                <span class="burger-line"></span>
+                <span class="burger-line"></span>
+                <span class="burger-line"></span>
+            </button>
+    </nav>
+
+    <div class="mobile-menu" id="mobileMenu">
+        <ul class="mobile-nav-list">
+            <li class="mobile-nav-item">
+                <a href="../mainpage/mainpage.html" class="mobile-nav-link">Главная</a>
+            </li>
+            <li class="mobile-nav-item">
+                <a href="../fundamentum/fundamentum.html" class="mobile-nav-link">Основы</a>
+            </li>
+            <li class="mobile-nav-item">
+                <a href="../practice/practice.html" class="mobile-nav-link">Практика</a>
+            </li>
+            <li class="mobile-nav-item">
+                <a href="../resourses/resourses.html" class="mobile-nav-link">Ресурсы</a>
+            </li>
+        </ul>
+    </div>
+
+    <div class="mobile-overlay" id="mobileOverlay"></div>
+
+    <main class="container">
+        <section class="typography-trainer">
+            <h1>Конструктор типографики</h1>
+            <p>Экспериментируйте с параметрами шрифтов и сразу видите результат. Используйте ползунки для тонкой настройки.</p>
+
+            <div class="grid">
+                <div class="controls-panel">
+                    <h3>Панель управления</h3>
+                    
+                    <!-- Кнопка обновления -->
+                    <div class="action-buttons">
+                        <button class="update-button" id="updateButton">🔄 Применить изменения</button>
+                        <button class="reset-button" id="resetButton">🗑️ Сбросить</button>
+                    </div>
+                    <div id="statusMessage" class="status-message status-info">
+                        Настройте параметры и нажмите "Применить изменения"
+                    </div>
+                    
+                    <!-- Выбор шрифта -->
+                    <div class="control-group">
+                        <h4>Шрифт</h4>
+                        <div class="font-selector">
+                            <!-- Обычные шрифты -->
+                            <div class="font-option active" data-font="Roboto" data-type="static">
+                                <strong>Roboto</strong>
+                                <div style="font-family: 'Roboto'">Без засечек</div>
+                            </div>
+                            <div class="font-option" data-font="Playfair Display" data-type="static">
+                                <strong>Playfair</strong>
+                                <div style="font-family: 'Playfair Display'">С засечками</div>
+                            </div>
+                            <div class="font-option" data-font="Source Sans 3" data-type="static">
+                                <strong>Source Sans</strong>
+                                <div style="font-family: 'Source Sans 3'">Гуманистический</div>
+                            </div>
+                            <!-- Переменные шрифты -->
+                            <div class="font-option" data-font="Inter" data-type="variable">
+                                <strong>Inter Variable</strong>
+                                <div style="font-family: 'Inter'">Адаптивный</div>
+                            </div>
+                            <div class="font-option" data-font="Source Serif 4" data-type="variable">
+                                <strong>Source Serif</strong>
+                                <div style="font-family: 'Source Serif 4'">Антиква</div>
+                            </div>
+                            <div class="font-option" data-font="Roboto Flex" data-type="variable">
+                                <strong>Roboto Flex</strong>
+                                <div style="font-family: 'Roboto Flex'">Супер-вариативный</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Основные настройки -->
+                    <div class="control-group">
+                        <h4>Основные параметры</h4>
+                        
+                        <div class="slider-container">
+                            <label>Размер шрифта:</label>
+                            <input type="range" id="fontSize" min="12" max="72" value="16">
+                            <span class="slider-value" id="fontSizeValue">16px</span>
+                        </div>
+
+                        <div class="slider-container">
+                            <label>Высота строки:</label>
+                            <input type="range" id="lineHeight" min="1" max="3" step="0.1" value="1.6">
+                            <span class="slider-value" id="lineHeightValue">1.6</span>
+                        </div>
+
+                        <div class="slider-container">
+                            <label>Межбукв. интервал:</label>
+                            <input type="range" id="letterSpacing" min="-2" max="10" step="0.1" value="0">
+                            <span class="slider-value" id="letterSpacingValue">0px</span>
+                        </div>
+
+                        <div class="slider-container">
+                            <label>Насыщенность:</label>
+                            <input type="range" id="fontWeight" min="100" max="900" step="10" value="400">
+                            <span class="slider-value" id="fontWeightValue">400</span>
+                        </div>
+                    </div>
+
+                    <!-- Переменные настройки -->
+                    <div class="control-group variable-controls" id="variableControls">
+                        <h4>Переменные параметры</h4>
+                        
+                        <div class="slider-container">
+                            <label>Ширина (wdth):</label>
+                            <input type="range" id="fontWidth" min="75" max="125" value="100">
+                            <span class="slider-value" id="fontWidthValue">100</span>
+                        </div>
+
+                        <div class="slider-container">
+                            <label>Оптический размер (opsz):</label>
+                            <input type="range" id="opticalSize" min="8" max="144" value="16">
+                            <span class="slider-value" id="opticalSizeValue">16</span>
+                        </div>
+
+                        <div class="slider-container">
+                            <label>Наклон (slnt):</label>
+                            <input type="range" id="fontSlant" min="-10" max="0" value="0">
+                            <span class="slider-value" id="fontSlantValue">0</span>
+                        </div>
+
+                        <div class="slider-container">
+                            <label>Градус (GRAD):</label>
+                            <input type="range" id="fontGrade" min="-200" max="150" value="0">
+                            <span class="slider-value" id="fontGradeValue">0</span>
+                        </div>
+                    </div>
+
+                    <!-- Цвет и выравнивание -->
+                    <div class="control-group">
+                        <h4>Внешний вид</h4>
+                        
+                        <div class="grid">
+                            <div>
+                                <label for="textColor">Цвет текста:</label>
+                                <input type="color" id="textColor" value="#333333">
+                            </div>
+                            <div>
+                                <label for="textAlign">Выравнивание:</label>
+                                <select id="textAlign">
+                                    <option value="left">По левому краю</option>
+                                    <option value="center">По центру</option>
+                                    <option value="right">По правому краю</option>
+                                    <option value="justify">По ширине</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <!-- Область предпросмотра -->
+                    <div class="preview-area" id="previewArea">
+                        <h1 class="demo-heading" id="demoHeading">Заголовок первого уровня</h1>
+                        <h2 class="demo-subheading" id="demoSubheading">Подзаголовок или вводный текст</h2>
+                        <p class="demo-body" id="demoBody">
+                            Это основной текст вашего контента. Здесь вы можете увидеть, как выбранные настройки 
+                            типографики влияют на читаемость и внешний вид текста. Обратите внимание на высоту строки, 
+                            межбуквенные интервалы и общую гармонию текстовой композиции.
+                        </p>
+                        <p class="demo-body" id="demoBody2">
+                            Второй абзац позволяет оценить, как сочетаются между собой разные блоки текста. 
+                            Правильно настроенная типографика создает ритм и направляет взгляд читателя по странице.
+                        </p>
+                        <div class="demo-caption" id="demoCaption">
+                            Подпись или дополнительная информация
+                        </div>
+                    </div>
+
+                    <!-- Вывод CSS -->
+                    <div class="control-group">
+                        <h4>CSS код</h4>
+                        <div class="css-output" id="cssOutput">
+                            /* Настройте параметры и нажмите "Применить изменения" */
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <h4>Быстрые пресеты</h4>
+                        <div class="action-buttons">
+                            <button class="outline" data-preset="minimal">Минимализм</button>
+                            <button class="outline" data-preset="elegant">Элегантность</button>
+                            <button class="outline" data-preset="modern">Модерн</button>
+                            <button class="outline" data-preset="playful">Игривость</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="container">
+        <small>© 2025 Типографика · Конструктор для экспериментов</small>
+    </footer>
+
+    <script>
+        class TypographyTrainer {
+            constructor() {
+                this.currentFont = 'Roboto';
+                this.fontType = 'static';
+                this.isInitialized = false;
+                this.initElements();
+                this.bindEvents();
+                this.showStatus('Готов к работе! Настройте параметры и нажмите "Применить изменения"', 'info');
+            }
+
+            initElements() {
+                // Основные элементы управления
+                this.fontOptions = document.querySelectorAll('.font-option');
+                this.previewArea = document.getElementById('previewArea');
+                this.variableControls = document.getElementById('variableControls');
+                this.cssOutput = document.getElementById('cssOutput');
+                this.statusMessage = document.getElementById('statusMessage');
+                this.updateButton = document.getElementById('updateButton');
+
+                // Ползунки
+                this.fontSize = document.getElementById('fontSize');
+                this.fontSizeValue = document.getElementById('fontSizeValue');
+                this.lineHeight = document.getElementById('lineHeight');
+                this.lineHeightValue = document.getElementById('lineHeightValue');
+                this.letterSpacing = document.getElementById('letterSpacing');
+                this.letterSpacingValue = document.getElementById('letterSpacingValue');
+                this.fontWeight = document.getElementById('fontWeight');
+                this.fontWeightValue = document.getElementById('fontWeightValue');
+
+                // Переменные параметры
+                this.fontWidth = document.getElementById('fontWidth');
+                this.fontWidthValue = document.getElementById('fontWidthValue');
+                this.opticalSize = document.getElementById('opticalSize');
+                this.opticalSizeValue = document.getElementById('opticalSizeValue');
+                this.fontSlant = document.getElementById('fontSlant');
+                this.fontSlantValue = document.getElementById('fontSlantValue');
+                this.fontGrade = document.getElementById('fontGrade');
+                this.fontGradeValue = document.getElementById('fontGradeValue');
+
+                // Дополнительные параметры
+                this.textColor = document.getElementById('textColor');
+                this.textAlign = document.getElementById('textAlign');
+
+                // Элементы предпросмотра
+                this.demoHeading = document.getElementById('demoHeading');
+                this.demoSubheading = document.getElementById('demoSubheading');
+                this.demoBody = document.getElementById('demoBody');
+                this.demoBody2 = document.querySelectorAll('.demo-body')[1];
+                this.demoCaption = document.getElementById('demoCaption');
+
+                // Инициализируем значения ползунков
+                this.updateSliderValues();
+            }
+
+            bindEvents() {
+                // Выбор шрифта
+                this.fontOptions.forEach(option => {
+                    option.addEventListener('click', () => {
+                        this.fontOptions.forEach(opt => opt.classList.remove('active'));
+                        option.classList.add('active');
+                        this.currentFont = option.dataset.font;
+                        this.fontType = option.dataset.type;
+                        this.toggleVariableControls();
+                        this.showStatus(`Выбран шрифт: ${this.currentFont}`, 'info');
+                    });
+                });
+
+                // Основные ползунки
+                this.fontSize.addEventListener('input', () => this.updateSliderValue(this.fontSize, this.fontSizeValue, 'px'));
+                this.lineHeight.addEventListener('input', () => this.updateSliderValue(this.lineHeight, this.lineHeightValue));
+                this.letterSpacing.addEventListener('input', () => this.updateSliderValue(this.letterSpacing, this.letterSpacingValue, 'px'));
+                this.fontWeight.addEventListener('input', () => this.updateSliderValue(this.fontWeight, this.fontWeightValue));
+
+                // Переменные ползунки
+                this.fontWidth.addEventListener('input', () => this.updateSliderValue(this.fontWidth, this.fontWidthValue));
+                this.opticalSize.addEventListener('input', () => this.updateSliderValue(this.opticalSize, this.opticalSizeValue));
+                this.fontSlant.addEventListener('input', () => this.updateSliderValue(this.fontSlant, this.fontSlantValue));
+                this.fontGrade.addEventListener('input', () => this.updateSliderValue(this.fontGrade, this.fontGradeValue));
+
+                // Дополнительные параметры
+                this.textColor.addEventListener('input', () => {
+                    this.showStatus('Изменен цвет текста', 'info');
+                });
+                this.textAlign.addEventListener('change', () => {
+                    this.showStatus('Изменено выравнивание', 'info');
+                });
+
+                // Кнопка обновления
+                this.updateButton.addEventListener('click', () => {
+                    this.applyChanges();
+                });
+
+                // Пресеты
+                document.querySelectorAll('[data-preset]').forEach(button => {
+                    button.addEventListener('click', () => {
+                        this.applyPreset(button.dataset.preset);
+                    });
+                });
+
+                // Сброс
+                document.getElementById('resetButton').addEventListener('click', () => {
+                    this.resetToDefaults();
+                });
+            }
+
+            updateSliderValue(slider, valueElement, suffix = '') {
+                valueElement.textContent = slider.value + suffix;
+                this.showStatus('Параметр изменен. Нажмите "Применить изменения"', 'info');
+            }
+
+            updateSliderValues() {
+                this.updateSliderValue(this.fontSize, this.fontSizeValue, 'px');
+                this.updateSliderValue(this.lineHeight, this.lineHeightValue);
+                this.updateSliderValue(this.letterSpacing, this.letterSpacingValue, 'px');
+                this.updateSliderValue(this.fontWeight, this.fontWeightValue);
+                this.updateSliderValue(this.fontWidth, this.fontWidthValue);
+                this.updateSliderValue(this.opticalSize, this.opticalSizeValue);
+                this.updateSliderValue(this.fontSlant, this.fontSlantValue);
+                this.updateSliderValue(this.fontGrade, this.fontGradeValue);
+            }
+
+            toggleVariableControls() {
+                if (this.fontType === 'variable') {
+                    this.variableControls.style.display = 'block';
+                    this.showStatus('Выбран переменный шрифт. Доступны дополнительные параметры', 'info');
+                } else {
+                    this.variableControls.style.display = 'none';
+                    this.showStatus('Выбран обычный шрифт', 'info');
+                }
+            }
+
+            showStatus(message, type = 'info') {
+                this.statusMessage.textContent = message;
+                this.statusMessage.className = 'status-message';
+                this.statusMessage.classList.add(`status-${type}`);
+            }
+
+            applyChanges() {
+                // Показываем анимацию обновления
+                this.previewArea.classList.add('updating');
+                
+                // Основные стили
+                const styles = {
+                    fontFamily: `'${this.currentFont}', sans-serif`,
+                    fontSize: this.fontSize.value + 'px',
+                    lineHeight: this.lineHeight.value,
+                    letterSpacing: this.letterSpacing.value + 'px',
+                    fontWeight: this.fontWeight.value,
+                    color: this.textColor.value,
+                    textAlign: this.textAlign.value
+                };
+
+                // Применяем стили ко всем элементам предпросмотра
+                const elements = [this.demoHeading, this.demoSubheading, this.demoBody, this.demoBody2, this.demoCaption];
+                elements.forEach(el => {
+                    Object.assign(el.style, styles);
+                });
+
+                // Для переменных шрифтов добавляем специальные настройки
+                if (this.fontType === 'variable') {
+                    const variationSettings = {};
+                    
+                    // Добавляем все оси с правильными значениями
+                    variationSettings.wght = this.fontWeight.value;
+                    variationSettings.wdth = this.fontWidth.value;
+                    variationSettings.opsz = this.opticalSize.value;
+                    variationSettings.GRAD = this.fontGrade.value;
+                    variationSettings.slnt = this.fontSlant.value;
+
+                    // Создаем строку для font-variation-settings
+                    const variationString = Object.entries(variationSettings)
+                        .map(([axis, value]) => `'${axis}' ${value}`)
+                        .join(', ');
+
+                    if (variationString) {
+                        const variableStyle = {
+                            fontVariationSettings: variationString
+                        };
+                        
+                        elements.forEach(el => {
+                            Object.assign(el.style, variableStyle);
+                        });
+                    }
+                }
+
+                this.updateCSSOutput(styles);
+                this.showStatus('Изменения успешно применены!', 'success');
+                
+                // Убираем анимацию через короткое время
+                setTimeout(() => {
+                    this.previewArea.classList.remove('updating');
+                }, 500);
+            }
+
+            updateCSSOutput(styles) {
+                let css = `/* Основные настройки типографики */\n`;
+                css += `.text-element {\n`;
+                css += `  font-family: ${styles.fontFamily};\n`;
+                css += `  font-size: ${styles.fontSize};\n`;
+                css += `  line-height: ${styles.lineHeight};\n`;
+                css += `  letter-spacing: ${styles.letterSpacing};\n`;
+                css += `  font-weight: ${styles.fontWeight};\n`;
+                css += `  color: ${styles.color};\n`;
+                css += `  text-align: ${styles.textAlign};\n`;
+
+                if (this.fontType === 'variable') {
+                    css += `  font-variation-settings: \n`;
+                    css += `    'wght' ${this.fontWeight.value},\n`;
+                    css += `    'wdth' ${this.fontWidth.value},\n`;
+                    css += `    'opsz' ${this.opticalSize.value},\n`;
+                    css += `    'GRAD' ${this.fontGrade.value},\n`;
+                    css += `    'slnt' ${this.fontSlant.value};\n`;
+                }
+                
+                css += `}`;
+
+                this.cssOutput.textContent = css;
+            }
+
+            applyPreset(presetName) {
+                const presets = {
+                    minimal: {
+                        font: 'Inter',
+                        type: 'variable',
+                        fontSize: 16,
+                        lineHeight: 1.5,
+                        letterSpacing: 0,
+                        fontWeight: 400,
+                        fontWidth: 100,
+                        opticalSize: 16,
+                        fontSlant: 0,
+                        fontGrade: 0,
+                        color: '#333333',
+                        align: 'left'
+                    },
+                    elegant: {
+                        font: 'Playfair Display',
+                        type: 'static',
+                        fontSize: 18,
+                        lineHeight: 1.8,
+                        letterSpacing: 0.5,
+                        fontWeight: 400,
+                        color: '#2c3e50',
+                        align: 'justify'
+                    },
+                    modern: {
+                        font: 'Roboto Flex',
+                        type: 'variable',
+                        fontSize: 16,
+                        lineHeight: 1.4,
+                        letterSpacing: -0.2,
+                        fontWeight: 350,
+                        fontWidth: 110,
+                        opticalSize: 14,
+                        fontSlant: -8,
+                        fontGrade: 50,
+                        color: '#1a1a1a',
+                        align: 'left'
+                    },
+                    playful: {
+                        font: 'Source Serif 4',
+                        type: 'variable',
+                        fontSize: 17,
+                        lineHeight: 1.7,
+                        letterSpacing: 1,
+                        fontWeight: 600,
+                        fontWidth: 115,
+                        opticalSize: 20,
+                        fontSlant: 0,
+                        fontGrade: 80,
+                        color: '#e74c3c',
+                        align: 'center'
+                    }
+                };
+
+                const preset = presets[presetName];
+                if (!preset) return;
+
+                // Активируем соответствующий шрифт
+                this.fontOptions.forEach(option => {
+                    if (option.dataset.font === preset.font) {
+                        option.click();
+                    }
+                });
+
+                // Устанавливаем значения
+                this.setSliderValue(this.fontSize, preset.fontSize);
+                this.setSliderValue(this.lineHeight, preset.lineHeight);
+                this.setSliderValue(this.letterSpacing, preset.letterSpacing);
+                this.setSliderValue(this.fontWeight, preset.fontWeight);
+                
+                if (preset.type === 'variable') {
+                    this.setSliderValue(this.fontWidth, preset.fontWidth);
+                    this.setSliderValue(this.opticalSize, preset.opticalSize);
+                    this.setSliderValue(this.fontSlant, preset.fontSlant);
+                    this.setSliderValue(this.fontGrade, preset.fontGrade);
+                }
+
+                this.textColor.value = preset.color;
+                this.textAlign.value = preset.align;
+
+                this.showStatus(`Применен пресет: ${presetName}`, 'info');
+                this.applyChanges();
+            }
+
+            setSliderValue(slider, value) {
+                slider.value = value;
+                const valueElement = document.getElementById(slider.id + 'Value');
+                if (valueElement) {
+                    const suffix = slider === this.fontSize || slider === this.letterSpacing ? 'px' : '';
+                    valueElement.textContent = value + suffix;
+                }
+            }
+
+            resetToDefaults() {
+                // Сброс к начальным значениям
+                this.setSliderValue(this.fontSize, 16);
+                this.setSliderValue(this.lineHeight, 1.6);
+                this.setSliderValue(this.letterSpacing, 0);
+                this.setSliderValue(this.fontWeight, 400);
+                this.setSliderValue(this.fontWidth, 100);
+                this.setSliderValue(this.opticalSize, 16);
+                this.setSliderValue(this.fontSlant, 0);
+                this.setSliderValue(this.fontGrade, 0);
+                
+                this.textColor.value = '#333333';
+                this.textAlign.value = 'left';
+
+                // Активируем первый шрифт
+                this.fontOptions[0].click();
+
+                this.showStatus('Настройки сброшены к значениям по умолчанию', 'info');
+                this.applyChanges();
+            }
+        }
+
+        // Инициализация тренажёра при загрузке страницы
+        document.addEventListener('DOMContentLoaded', () => {
+            const trainer = new TypographyTrainer();
+            // Применяем начальные настройки
+            setTimeout(() => {
+                trainer.applyChanges();
+            }, 100);
+        });
+    </script>
+</body>
+</html>

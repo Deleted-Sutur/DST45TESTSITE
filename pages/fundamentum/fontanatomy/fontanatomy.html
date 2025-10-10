@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Шрифты и их анатомия</title>
+    <meta name="description" content="Изучите основы веб-типографики. Шрифты, иерархия, читаемость и современные технологии для вашего сайта.">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1.5.10/css/pico.min.css">
+    <style>
+        :root {
+            --typography-primary: #0066cc;
+            --typography-secondary: #333333;
+            --typography-light: #666666;
+        }
+
+        *{
+            margin:0;
+            padding:0;
+        }
+
+        /* Стили для навигации и бургер-меню */
+        nav.container-fluid {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        /* Бургер-кнопка */
+        .burger-btn {
+            display: none;
+            flex-direction: column;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0.5rem;
+            margin: 0;
+        }
+
+        .burger-line {
+            width: 24px;
+            height: 2px;
+            background: var(--pico-color);
+            margin: 2px 0;
+            transition: 0.3s;
+            border-radius: 1px;
+        }
+
+        /* Мобильное меню */
+        .mobile-menu {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: var(--pico-background-color);
+            transform: translateX(-100%);
+            transition: transform 0.3s ease-in-out;
+            z-index: 999;
+            padding: 2rem;
+            box-shadow: var(--pico-card-box-shadow);
+        }
+
+        .mobile-nav-list {
+            list-style: none;
+            padding: 0;
+            margin: 4rem 0 0 0;
+        }
+
+        .mobile-nav-item {
+            margin-bottom: 1rem;
+        }
+
+        .mobile-nav-link {
+            display: block;
+            padding: 1rem 0;
+            border-bottom: 1px solid var(--pico-muted-border-color);
+            text-decoration: none;
+            color: var(--pico-color);
+            font-size: 1.1rem;
+            transition: color 0.3s ease;
+        }
+
+        .mobile-nav-link:hover {
+            color: var(--pico-primary);
+            background: none;
+        }
+
+        /* Активные состояния */
+        .mobile-menu.active {
+            transform: translateX(0);
+        }
+
+        .burger-btn.active .burger-line:nth-child(1) {
+            transform: rotate(45deg) translate(6px, 6px);
+        }
+
+        .burger-btn.active .burger-line:nth-child(2) {
+            opacity: 0;
+        }
+
+        .burger-btn.active .burger-line:nth-child(3) {
+            transform: rotate(-45deg) translate(6px, -6px);
+        }
+
+        /* Оверлей */
+        .mobile-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            opacity: 0;
+            visibility: hidden;
+            transition: 0.3s;
+            z-index: 998;
+        }
+
+        .mobile-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Адаптивность */
+        @media (max-width: 768px) {
+            .burger-btn {
+                display: flex;
+            }
+
+            .desktop-menu {
+                display: none;
+            }
+        }
+        
+        .headtext {
+            padding: 4rem 1rem;
+            text-align: center;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            margin-bottom: 3rem;
+        }
+        
+        .headtext h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--typography-secondary);
+            line-height: 1.1;
+        }
+        
+        .headtext p {
+            font-size: 1.4rem;
+            color: var(--typography-light);
+            max-width: 800px;
+            margin: 0 auto 2rem;
+            line-height: 1.6;
+        }
+        
+        @media (max-width: 768px) {
+            .demo-comparison {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .maintext {
+            padding: 2rem;
+            border-radius: 8px;
+            min-height: 200px;
+        }
+        
+        .maintext {
+            padding: 4rem;
+            border-radius: 8px;
+            min-height: 200px;
+            background-color: #fff;
+        }
+        
+        .maintext h3 {
+            font-size: 2rem;
+            color: #333;
+            margin-bottom: 1rem;
+        }
+
+        .maintext ul {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin: 2rem;
+            list-style: none;
+            color: #333;
+            font-family: "Helvetica Neue", Arial, sans-serif;
+        }
+
+        .maintext ul li {
+            list-style: none;
+            position: relative;
+        }
+
+        .maintext ul li:before {
+            content:  "—";
+            position: absolute;
+            left:     -30px;
+        }
+
+        .maintext h5 {
+            font-size: 1.5rem;
+            color: #333;
+            margin-bottom: 1rem;
+        }
+        
+        .maintext p {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            color: #333;
+            font-family: "Helvetica Neue", Arial, sans-serif;
+            margin-bottom: 0.5rem;
+        }
+
+        ul.in {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-top: 0rem;
+            margin-bottom: 1rem;
+            list-style: none;
+            color: #333;
+            font-family: "Helvetica Neue", Arial, sans-serif;
+        }
+
+        ul.in ul li {
+            list-style: none;
+            margin-top: 0rem;
+            margin-bottom: 0rem;
+            position: relative;
+        }
+
+        ul.in ul li:before {
+            content:  "—";
+            position: absolute;
+            left:     -30px;
+            margin-top: 0rem;
+            margin-bottom: 0rem;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 2rem 1rem;
+            margin-top: 3rem;
+            border-top: 1px solid #dee2e6;
+            color: var(--typography-light);
+        }
+
+        .simple-sidebar {
+        position: sticky;
+        top: 5rem;
+        max-width: 350px;
+        background: var(--pico-background-color);
+        padding: 0.5rem;
+        border-radius: 2px;
+        margin-bottom: -16rem;
+        border: 1px solid var(--pico-muted-border-color);
+    }
+
+    .simple-sidebar h4 {
+        margin-top: 0;
+        color: var(--pico-primary);
+        border-bottom: 2px solid var(--pico-primary);
+        padding-bottom: 0.5rem;
+    }
+
+    .simple-sidebar ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .simple-sidebar li {
+        margin-bottom: 0.5rem;
+    }
+
+    .simple-sidebar a {
+        text-decoration: none;
+        color: var(--pico-color);
+        padding: 0.5rem;
+        display: block;
+        border-radius: 4px;
+        transition: background 0.3s ease;
+    }
+
+    .simple-sidebar a:hover {
+        background: var(--pico-primary);
+        color: white;
+    }
+    </style>
+</head>
+<body>
+     <nav class="container-fluid">
+            <ul>
+                <li><a href="../../mainpage/mainpage.html"><strong>dst45TestSite</strong></a></li>
+            </ul>
+            
+            <!-- Десктопное меню -->
+            <ul>
+                <li><a href="../../fundamentum/fundamentum.html">Основы</a></li>
+                <li><a href="../../practice/practice.html">Практика</a></li>
+                <li><a href="../../resourses/resourses.html">Ресурсы</a></li>
+            </ul>
+
+            <!-- Бургер-кнопка -->
+            <button class="burger-btn" id="burgerButton">
+                <span class="burger-line"></span>
+                <span class="burger-line"></span>
+                <span class="burger-line"></span>
+            </button>
+    </nav>
+
+    <!-- Мобильное меню -->
+    <div class="mobile-menu" id="mobileMenu">
+        <ul class="mobile-nav-list">
+            <li class="mobile-nav-item">
+                <a href="../../mainpage/mainpage.html" class="mobile-nav-link">Главная</a>
+            </li>
+            <li class="mobile-nav-item">
+                <a href="../../fundamentum/fundamentum.html" class="mobile-nav-link">Основы</a>
+            </li>
+            <li class="mobile-nav-item">
+                <a href="../../practice/practice.html" class="mobile-nav-link">Практика</a>
+            </li>
+            <li class="mobile-nav-item">
+                <a href="../../resourses/resourses.html" class="mobile-nav-link">Ресурсы</a>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Оверлей для мобильного меню -->
+    <div class="mobile-overlay" id="mobileOverlay"></div>
+
+    <aside class="simple-sidebar">
+    <nav>
+        <ul>
+            <li><a href="#fontanatomy">Анатомия шрифта: Как устроены буквы и почему это важно</a></li>
+            <li><a href="#mainfontelements">Основные элементы анатомии шрифта</a></li>
+            <li><a href="#importance">Почему это важно на практике?</a></li>
+            <li><a href="#сonclusion">Заключение</a></li>
+        </ul>
+    </nav>
+</aside>
+
+    <main class="container">
+        <section class="headtext">
+            <h1>Шрифты и их анатомия</h1>
+        </section>
+        <section class="maintext">
+            <h3 id="fontanatomy">Анатомия шрифта: Как устроены буквы и почему это важно</h3>
+            <p>Шрифт — это не просто набор значков для передачи информации. Каждая буква, каждый символ — это результат работы дизайнера, сложная конструкция, состоящая из отдельных элементов. Понимание анатомии шрифта подобно умению читать чертеж: оно позволяет видеть не просто текст, а характер, настроение и историю, заложенные в начертании. Это знание — фундамент для осознанного выбора шрифтов и создания визуально гармоничных проектов.</p>
+            <h5>Базовые термины: о чём вообще речь?</h5>
+            <p>Для начала разберёмся с ключевыми понятиями, которые часто путают:<br></p>
+                <ul>
+                    <li>Шрифт (Font) — это техническая реализация, конкретный файл (например, HelveticaNeue-Bold.ttf). Это «носитель».</li>
+                    <li>Гарнитура (Typeface) — это дизайнерское семейство, художественное произведение (например, гарнитура Helvetica). Она может включать в себя множество шрифтов: обычный, жирный, курсивный и т.д.</li>
+                </ul>
+            <p>Грубая аналогия: гарнитура — это песня, а шрифт — это MP3-файл с этой песней.</p>
+            <p></p>
+            <h3 id="mainfontelements">Основные элементы анатомии шрифта</h3>
+            <p>Представьте, что каждая буква — это архитектурное сооружение. У него есть несущие конструкции, декоративные элементы и уникальные детали.</p>
+            <h5>1. Главные «конструктивные» элементы</h5>
+            <p>Засечки (Serifs) — это небольшие штрихи на концах основных и соединительных линий буквы. Они бывают:</p>
+            <ul class="in">
+                <li>Прямоугольные (Slab Serifs): Массивные, как у шрифта Rockwell.</li>
+                <li>Клиньевидные: Тонкие, изящные, как у шрифта Times New Roman. Шрифты без засечек называются Гротесками (Sans-Serifs) — от фра«sans» — «без».</li>
+            </ul>
+            <p>Основной штрих — главный, обычно вертикальный, элемент буквы, несущий на себе основную нагрузку (например, в буквах «Н», «Т»).</p>
+            <p>Соединительный штрих — горизонтальная или наклонная линия, соединяющая два основных штриха (как в «А», «Н», «е»).</p>
+            <p>Овал — замкнутая или почти замкнутая округлая часть буквы (например, в «b», «d», «o», «p»).</p>
+            <p>Ножка и Хвост — Нижний отходящий штрих у букв «К», «R» — это ножка. Нижний изогнутый отросток у «Q» или верхний у «Q» — это хвост.</p>
+            <p>Верхний и нижний выносные элементы:</p>
+            <ul class="in">
+                <li>Ascender — часть строчной буквы, которая поднимается выше линии строчных знаков (в «b», «d», «h»).</li>
+                <li>Descender — часть буквы, которая опускается ниже линии шрифта (в «p», «q», «y»).</li>
+            </ul>
+            <p></p>
+            <h5>2. Детали, определяющие характер</h5>
+            <p>Именно эти мелочи придают шрифту индивидуальность.</p>
+            <ul class="in">
+                <li>Апертура (Aperture) — степень открытости символа. Сравните «е» в шрифте Helvetica (маленькая апертура) и «е» в шрифте PT Sans (большая апертура). Большая апертура часто улучшает читаемость.</li>
+                <li>Контрастность (Contrast) — разница в толщине между основными и соединительными штрихами. У шрифта Didot (модерн) контраст очень высокий, а у Helvetica он практически отсутствует.</li>
+                <li>Насечки (Spur) — небольшой выступ или капля у основания некоторых букв, например, у строчной «g» в шрифте Georgia. Это декоративный элемент.</li>
+                <li>Соединение (Link) — штрих, соединяющий верхний и нижний овалы в строчной «g».</li>
+                <li>Каплевидные элементы (Terminal) — окончание штриха, не увенчанное засечкой. Он может быть закругленным, скошенным или иметь форму капли (как у знаменитой «е» в шрифте ITC Garamond).</li>
+                <li>Кернинг (Kerning) — это не часть самой буквы, а процесс регулирования расстояния между конкретными парами символов, чтобы оно выглядело визуально равномерным. Например, между «А» и «V» расстояние обычно уменьшают.</li>
+            </ul>
+            <p></p>
+            <h3 id="importance">Почему это важно на практике?</h3>
+            <p>1. Читаемость. Шрифты с засечками (Serif) традиционно считаются более удобочитаемыми для длинного печатного текста, так как засечки направляют взгляд вдоль строки. Гротески (Sans-Serif) часто лучше работают в дисплейных условиях (заголовки, интерфейсы, экраны).</p>
+            <p>2. Характер и эмоции. Анатомия шрифта создает настроение.</p>
+            <ul class="in">
+                <li>Высокий контраст и тонкие засечки (Didot) — элегантность, роскошь, мода.</li>
+                <li>Геометрические гротески (Futura) — современность, минимализм, прогресс.</li>
+                <li>Гуманистические гротески (Gill Sans) — дружелюбие, доступность, теплота.</li>
+                <li>Slab Serifs (Courier) — брутальность, стабильность, ретро-стиль.</li>
+            </ul>
+            <p>3. Осознанный выбор. Когда вы понимаете разницу между Arial и Helvetica (у последней, например, более закрытые апертуры и уникальные терминалы), вы перестаете выбирать шрифты «на глазок» и делаете это обоснованно, под конкретную задачу.</p>
+            <h3 id="сonclusion">Заключение</h3>
+            <p>Анатомия шрифта — это язык, на котором говорит типографика. Выучив его азы, вы начинаете не просто «видеть» шрифты, а «читать» их. Вы замечаете, почему один шрифт выглядит солидно, а другой — по-дружески, почему одним удобно читать книгу, а другой идеально подходит для навигации в аэропорту. Этот навык — суперсила для дизайнера, маркетолога и любого, кто работает с визуальной коммуникацией. В следующий раз, выбирая шрифт, присмотритесь к его анатомии — и он расскажет вам о себе всю историю.</p>
+        </section>
+        <a href="../../fundamentum/fundamentum.html"><button>В основной раздел</button></a>
+        <a href="../composition/composition.html"><button>К следующей статье</button></a>
+        <a><button disabled>К предыдущей статье</button></a>
+    </main>
+
+    <footer class="container">
+        <small>© 2025 dst45TestSite</small>
+    </footer>
+
+    <script>
+        // Бургер-меню
+        class BurgerMenu {
+            constructor() {
+                this.burgerButton = document.getElementById('burgerButton');
+                this.mobileMenu = document.getElementById('mobileMenu');
+                this.overlay = document.getElementById('mobileOverlay');
+                this.navLinks = document.querySelectorAll('.mobile-nav-link');
+                
+                this.init();
+            }
+
+            init() {
+                // Обработчик клика по бургер-кнопке
+                this.burgerButton.addEventListener('click', () => {
+                    this.toggleMenu();
+                });
+
+                // Обработчик клика по оверлею
+                this.overlay.addEventListener('click', () => {
+                    this.closeMenu();
+                });
+
+                // Обработчики клика по ссылкам меню
+                this.navLinks.forEach(link => {
+                    link.addEventListener('click', () => {
+                        this.closeMenu();
+                    });
+                });
+
+                // Закрытие меню при нажатии Escape
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === 'Escape') {
+                        this.closeMenu();
+                    }
+                });
+
+                // Закрытие меню при изменении размера окна на десктоп
+                window.addEventListener('resize', () => {
+                    if (window.innerWidth > 768) {
+                        this.closeMenu();
+                    }
+                });
+            }
+
+            toggleMenu() {
+                this.burgerButton.classList.toggle('active');
+                this.mobileMenu.classList.toggle('active');
+                this.overlay.classList.toggle('active');
+                
+                // Блокировка скролла тела страницы
+                document.body.style.overflow = this.mobileMenu.classList.contains('active') ? 'hidden' : '';
+            }
+
+            closeMenu() {
+                this.burgerButton.classList.remove('active');
+                this.mobileMenu.classList.remove('active');
+                this.overlay.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+        }
+
+        // Инициализация бургер-меню при загрузке DOM
+        document.addEventListener('DOMContentLoaded', () => {
+            new BurgerMenu();
+        });
+    </script>
+</body>
+</html>

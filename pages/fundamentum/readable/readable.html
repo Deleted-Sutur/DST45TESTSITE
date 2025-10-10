@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Читаемость и доступность</title>
+    <meta name="description" content="Изучите основы веб-типографики. Шрифты, иерархия, читаемость и современные технологии для вашего сайта.">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1.5.10/css/pico.min.css">
+    <style>
+        :root {
+            --typography-primary: #0066cc;
+            --typography-secondary: #333333;
+            --typography-light: #666666;
+        }
+
+        *{
+            margin:0;
+            padding:0;
+        }
+
+        /* Стили для навигации и бургер-меню */
+        nav.container-fluid {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        /* Бургер-кнопка */
+        .burger-btn {
+            display: none;
+            flex-direction: column;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0.5rem;
+            margin: 0;
+        }
+
+        .burger-line {
+            width: 24px;
+            height: 2px;
+            background: var(--pico-color);
+            margin: 2px 0;
+            transition: 0.3s;
+            border-radius: 1px;
+        }
+
+        /* Мобильное меню */
+        .mobile-menu {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: var(--pico-background-color);
+            transform: translateX(-100%);
+            transition: transform 0.3s ease-in-out;
+            z-index: 999;
+            padding: 2rem;
+            box-shadow: var(--pico-card-box-shadow);
+        }
+
+        .mobile-nav-list {
+            list-style: none;
+            padding: 0;
+            margin: 4rem 0 0 0;
+        }
+
+        .mobile-nav-item {
+            margin-bottom: 1rem;
+        }
+
+        .mobile-nav-link {
+            display: block;
+            padding: 1rem 0;
+            border-bottom: 1px solid var(--pico-muted-border-color);
+            text-decoration: none;
+            color: var(--pico-color);
+            font-size: 1.1rem;
+            transition: color 0.3s ease;
+        }
+
+        .mobile-nav-link:hover {
+            color: var(--pico-primary);
+            background: none;
+        }
+
+        /* Активные состояния */
+        .mobile-menu.active {
+            transform: translateX(0);
+        }
+
+        .burger-btn.active .burger-line:nth-child(1) {
+            transform: rotate(45deg) translate(6px, 6px);
+        }
+
+        .burger-btn.active .burger-line:nth-child(2) {
+            opacity: 0;
+        }
+
+        .burger-btn.active .burger-line:nth-child(3) {
+            transform: rotate(-45deg) translate(6px, -6px);
+        }
+
+        /* Оверлей */
+        .mobile-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            opacity: 0;
+            visibility: hidden;
+            transition: 0.3s;
+            z-index: 998;
+        }
+
+        .mobile-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Адаптивность */
+        @media (max-width: 768px) {
+            .burger-btn {
+                display: flex;
+            }
+
+            .desktop-menu {
+                display: none;
+            }
+        }
+        
+        .headtext {
+            padding: 4rem 1rem;
+            text-align: center;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            margin-bottom: 3rem;
+        }
+        
+        .headtext h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--typography-secondary);
+            line-height: 1.1;
+        }
+        
+        .headtext p {
+            font-size: 1.4rem;
+            color: var(--typography-light);
+            max-width: 800px;
+            margin: 0 auto 2rem;
+            line-height: 1.6;
+        }
+        
+        @media (max-width: 768px) {
+            .demo-comparison {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .maintext {
+            padding: 4rem;
+            border-radius: 8px;
+            min-height: 200px;
+        }
+        
+        .maintext {
+            background-color: #fff;
+        }
+        
+        .maintext h3 {
+            font-size: 2rem;
+            color: #333;
+            margin-bottom: 1rem;
+        }
+
+        .maintext ul {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin: 2rem;
+            list-style: none;
+            color: #333;
+            font-family: "Helvetica Neue", Arial, sans-serif;
+        }
+
+        .maintext ul li {
+            list-style: none;
+            position: relative;
+        }
+
+        .maintext ul li:before {
+            content:  "—";
+            position: absolute;
+            left:     -30px;
+        }
+
+        .maintext h5 {
+            font-size: 1.5rem;
+            color: #333;
+            margin-bottom: 1rem;
+        }
+        
+        .maintext p {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            color: #333;
+            font-family: "Helvetica Neue", Arial, sans-serif;
+            margin-bottom: 0.5rem;
+        }
+
+        ul.in {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-top: 0rem;
+            margin-bottom: 1rem;
+            list-style: none;
+            color: #333;
+            font-family: "Helvetica Neue", Arial, sans-serif;
+        }
+
+        ul.in ul li {
+            list-style: none;
+            margin-top: 0rem;
+            margin-bottom: 0rem;
+            position: relative;
+        }
+
+        ul.in ul li:before {
+            content:  "—";
+            position: absolute;
+            left:     -30px;
+            margin-top: 0rem;
+            margin-bottom: 0rem;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 2rem 1rem;
+            margin-top: 3rem;
+            border-top: 1px solid #dee2e6;
+            color: var(--typography-light);
+        }
+
+        .simple-sidebar {
+        position: sticky;
+        top: 5rem;
+        max-width: 350px;
+        background: var(--pico-background-color);
+        padding: 0.5rem;
+        border-radius: 2px;
+        margin-bottom: -16rem;
+        border: 1px solid var(--pico-muted-border-color);
+    }
+
+    .simple-sidebar h4 {
+        margin-top: 0;
+        color: var(--pico-primary);
+        border-bottom: 2px solid var(--pico-primary);
+        padding-bottom: 0.5rem;
+    }
+
+    .simple-sidebar ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .simple-sidebar li {
+        margin-bottom: 0.5rem;
+    }
+
+    .simple-sidebar a {
+        text-decoration: none;
+        color: var(--pico-color);
+        padding: 0.5rem;
+        display: block;
+        border-radius: 4px;
+        transition: background 0.3s ease;
+    }
+
+    .simple-sidebar a:hover {
+        background: var(--pico-primary);
+        color: white;
+    }
+    </style>
+</head>
+<body>
+     <nav class="container-fluid">
+            <ul>
+                <li><a href="../../mainpage/mainpage.html"><strong>dst45TestSite</strong></a></li>
+            </ul>
+            
+            <!-- Десктопное меню -->
+            <ul>
+                <li><a href="../../fundamentum/fundamentum.html">Основы</a></li>
+                <li><a href="../../practice/practice.html">Практика</a></li>
+                <li><a href="../../resourses/resourses.html">Ресурсы</a></li>
+            </ul>
+
+            <!-- Бургер-кнопка -->
+            <button class="burger-btn" id="burgerButton">
+                <span class="burger-line"></span>
+                <span class="burger-line"></span>
+                <span class="burger-line"></span>
+            </button>
+    </nav>
+
+    <!-- Мобильное меню -->
+    <div class="mobile-menu" id="mobileMenu">
+        <ul class="mobile-nav-list">
+            <li class="mobile-nav-item">
+                <a href="../../mainpage/mainpage.html" class="mobile-nav-link">Главная</a>
+            </li>
+            <li class="mobile-nav-item">
+                <a href="../../fundamentum/fundamentum.html" class="mobile-nav-link">Основы</a>
+            </li>
+            <li class="mobile-nav-item">
+                <a href="../../practice/practice.html" class="mobile-nav-link">Практика</a>
+            </li>
+            <li class="mobile-nav-item">
+                <a href="../../resourses/resourses.html" class="mobile-nav-link">Ресурсы</a>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Оверлей для мобильного меню -->
+    <div class="mobile-overlay" id="mobileOverlay"></div>
+
+    <aside class="simple-sidebar">
+    <nav>
+        <ul>
+            <li><a href="#readability">Читаемость — Основа Восприятия</a></li>
+            <li><a href="#availability">Доступность — Право на Информацию</a></li>
+            <li><a href="#efficiency">Читаемость + Доступность = Эффективная коммуникация</a></li>
+            <li><a href="#conclusion">Заключение</a></li>
+        </ul>
+    </nav>
+</aside>
+
+    <main class="container">
+        <section class="headtext">
+            <h1>Читаемость и доступность в типографике: Искусство быть понятым всеми</h1>
+            <p>Хорошая типографика — это не только про эстетику. В своей основе это функциональный инструмент коммуникации. Два столпа, на которых держится эта функциональность — читаемость и доступность. Если первая отвечает на вопрос -«Удобно ли вообще читать этот текст?»-, то вторая — -«Сможет ли каждый человек, включая людей с ограниченными возможностями, прочитать и понять его?»-.</p>
+        </section>
+        <section class="maintext">
+            <h3 id="readability">Читаемость — Основа Восприятия</h3>
+            <p>Читаемость — это объективное удобство восприятия сплошного текста. Она зависит от того, насколько легко глаз может скользить по строкам, не уставая, и распознавать слова и смыслы.</p>
+            <h5>Ключевые параметры читаемости:<br></h5>
+                <ul>
+                    <li>Размер шрифта - для основного текста на веб-страницах минимально комфортным считается 16px. Однако это не догма — он может варьироваться в зависимости от выбранного шрифта (некоторые шрифты визуально кажутся крупнее при том же кегле).</li>
+                    <li>Длина строки - идеальная длина строки — 45-75 символов (включая пробелы). Слишком длинная строка заставляет глаз совершать утомительные движения, а слишком короткая — постоянно «прыгать» с линии на линию, разрывая ритм чтения.</li>
+                    <li>Межстрочный интервал - оптимальный интервал обычно составляет 1.4–1.6 от размера шрифта. Например, для шрифта в 16px хороший line-height будет 24px (16 * 1.5). Больше места между строками — больше воздуха, а значит, меньше визуального шума и проще не потерять строку.</li>
+                    <li>Контрастность текста - речь не только о цвете, но и о толщине штрихов. Шрифты с низким контрастом (как большинство гротесков) часто лучше работают в вебе, чем изящные антиквы с высоким контрастом, тонкие штрихи которых могут «ломаться» на экранах.</li>
+                    <li>Выбор шрифта - для основного текста предпочтительны шрифты с открытой апертурой, умеренной высотой строчных букв (x-height) и нейтральным характером. Они не отвлекают от содержания. Подробнее про шрифты можно прочитать в первой статье.</li>
+                </ul>
+            <p></p>
+            <h3 id="availability">Доступность — Право на Информацию</h3>
+            <p>Доступность — это проектирование текста таким образом, чтобы он был воспринимаем людьми с различными формами инвалидности: слабовидящими, дальтониками, людьми с когнитивными нарушениями и др.</p>
+            <h5>Ключевые принципы доступной типографики:</h5>
+            <ul class="in">
+                <li>Цветовой контраст — неприкосновенное правило. Это самый критичный параметр. Текст должен иметь достаточный контраст по отношению к фону. Стандарт WCAG (Web Content Accessibility Guidelines) устанавливает четкие нормы: <br>
+                    - Уровень AA (минимум): Коэффициент контрастности не менее 4.5:1 для основного текста. <br>
+                    - Уровень AAA (желательно): Коэффициент не менее 7:1. <br>
+                Важно: Цвет не должен быть единственным способом передачи информации (например, «обязательные поля выделены красным»). Дублируйте смысл через текст или иконки.</li>
+                <li>Относительные единицы измерения. Используйте rem и em вместо пикселей (px). Это позволяет пользователям увеличивать размер шрифта в настройках браузера, не ломая верстку. Запрет масштабирования на сайте — грубое нарушение принципов доступности.</li>
+                <li>Семантическая структура и логический порядок. Используйте HTML-теги по назначению: &lt;h1&gt;, &lt;h2&gt;, &lt;h3&gt; для заголовков, &lt;p&gt; для абзацев, &lt;ul&gt;/&lt;ol&gt; для списков. Это позволяет людям, использующим скринридеры (программы чтения с экрана), навигироваться по странице, понимать ее структуру и переходить к нужному разделу. Так например &lt;div&gt; с классом .header — это не заголовок для скринридера и поэтому будет восприниматсья как обычный текст абзаца.</li>
+                <li>Выравнивание текста. Выравнивание по левому краю (для языков с письмом слева направо) — самое безопасное для доступности. Оно создает постоянный ритм и ровный левый край, что облегчает чтение людям с дислексией. Выравнивание по ширине создает «рваные» пробелы внутри строк, которые могут нарушить ритм и затруднить восприятие.</li>
+                <li>Интерлиньяж и межбуквенные интервалы. Людям с дислексией может помочь увеличенный межбуквенный интервал (letter-spacing) до 0.12–0.16em и межстрочный интервал до 1.5–2.0em. Это «разряжает» текст и мешает буквам «слипаться».</li>
+                <li>Адаптивность и Responsive. Типографика должна быть гибкой и корректно отображаться на любом устройстве — от десктопа до смартфона. Это гарантирует, что пользователь всегда сможет настроить комфортное для себя отображение.</li>
+            </ul>
+            
+            <h3 id="efficiency">Читаемость + Доступность = Эффективная коммуникация</h3>
+            <p>На практике эти два понятия неразделимы. Улучшая одно, вы почти всегда улучшаете другое.</p>
+
+            <h5>Практический чек-лист для вашего проекта:</h5>
+            <ul>
+                <li>Проверьте контраст. Используйте инструменты вроде WebAIM Contrast Checker или встроенные в Figma/Chrome DevTools.</li>
+                <li>Увеличьте межстрочный интервал. Если кажется, что и так нормально, попробуйте добавить еще 2-4px. Вы удивитесь, насколько текст станет «вздохнувшим».</li>
+                <li>Укоротите строки. На широких мониторах не давайте тексту растягиваться на всю ширину. Ограничьте контейнер.</li>
+                <li>Используйте иерархию правильно. Не просто сделайте заголовок крупным, а используйте семантический тег &lt;h2&gt;.</li>
+                <li>Дайте контроль пользователю. Не мешайте браузеру масштабировать страницу. Используйте относительные единицы (rem).</li>
+                <li>Протестируйте без цвета. Убедитесь, что вся важная информация понятна при переводе страницы в черно-белый режим.</li>
+            </ul>
+            <p></p>
+            <h3 id="conclusion">Заключение</h3>
+            <p>Забота о читаемости и доступности — это не просто следование техническим стандартам. Это проявление уважения к вашему пользователю, вашей аудитории. Это признание того, что мир разнообразен, и люди воспринимают информацию по-разному. <br>
+            Сделав свой текст удобочитаемым и доступным, вы не только избегаете юридических рисков и следуете этическим нормам, но и значительно расширяете охват аудитории, улучшаете пользовательский опыт и, в конечном счете, делаете ваш контент по-настоящему мощным и инклюзивным. Ведь главная цель любого текста — быть прочитанным и понятым.</p>
+        </section>
+        <a href="../../fundamentum/fundamentum.html"><button>В основной раздел</button></a>
+        <a href="../webfonts/webfonts.html"><button>К следующей статье</button></a>
+        <a href="../composition/composition.html"><button>К предыдущей статье</button></a>
+    </main>
+
+    <footer class="container">
+        <small>© 2025 dst45TestSite</small>
+    </footer>
+
+    <script>
+        // Бургер-меню
+        class BurgerMenu {
+            constructor() {
+                this.burgerButton = document.getElementById('burgerButton');
+                this.mobileMenu = document.getElementById('mobileMenu');
+                this.overlay = document.getElementById('mobileOverlay');
+                this.navLinks = document.querySelectorAll('.mobile-nav-link');
+                
+                this.init();
+            }
+
+            init() {
+                // Обработчик клика по бургер-кнопке
+                this.burgerButton.addEventListener('click', () => {
+                    this.toggleMenu();
+                });
+
+                // Обработчик клика по оверлею
+                this.overlay.addEventListener('click', () => {
+                    this.closeMenu();
+                });
+
+                // Обработчики клика по ссылкам меню
+                this.navLinks.forEach(link => {
+                    link.addEventListener('click', () => {
+                        this.closeMenu();
+                    });
+                });
+
+                // Закрытие меню при нажатии Escape
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === 'Escape') {
+                        this.closeMenu();
+                    }
+                });
+
+                // Закрытие меню при изменении размера окна на десктоп
+                window.addEventListener('resize', () => {
+                    if (window.innerWidth > 768) {
+                        this.closeMenu();
+                    }
+                });
+            }
+
+            toggleMenu() {
+                this.burgerButton.classList.toggle('active');
+                this.mobileMenu.classList.toggle('active');
+                this.overlay.classList.toggle('active');
+                
+                // Блокировка скролла тела страницы
+                document.body.style.overflow = this.mobileMenu.classList.contains('active') ? 'hidden' : '';
+            }
+
+            closeMenu() {
+                this.burgerButton.classList.remove('active');
+                this.mobileMenu.classList.remove('active');
+                this.overlay.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+        }
+
+        // Инициализация бургер-меню при загрузке DOM
+        document.addEventListener('DOMContentLoaded', () => {
+            new BurgerMenu();
+        });
+    </script>
+</body>
+</html>
