@@ -1,4 +1,4 @@
-Коюшев Роман Евгеньевич
+Коюшев Роман Евгеньевич /n
 Типографика в web
 Pico.css
 Сам сайт - https://deleted-sutur.github.io/DST45TESTSITE/index.html
