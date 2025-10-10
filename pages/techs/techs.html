@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Удалить, не нужно</title>
+    <meta name="description" content="Изучите основы веб-типографики. Шрифты, иерархия, читаемость и современные технологии для вашего сайта.">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1.5.10/css/pico.min.css">
+    <style>
+        /* Кастомные стили для типографики */
+        :root {
+            --typography-primary: #0066cc;
+            --typography-secondary: #333333;
+            --typography-light: #666666;
+        }
+        
+        .hero {
+            padding: 4rem 1rem;
+            text-align: center;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            margin-bottom: 3rem;
+        }
+        
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--typography-secondary);
+            line-height: 1.1;
+        }
+        
+        .hero p {
+            font-size: 1.4rem;
+            color: var(--typography-light);
+            max-width: 800px;
+            margin: 0 auto 2rem;
+            line-height: 1.6;
+        }
+        
+        .demo-section {
+            padding: 3rem 1rem;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            margin: 3rem 0;
+        }
+        
+        .demo-comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+        
+        @media (max-width: 768px) {
+            .demo-comparison {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .demo-bad, .demo-good {
+            padding: 2rem;
+            border-radius: 8px;
+            min-height: 200px;
+        }
+        
+        .demo-bad {
+            background-color: #fff;
+            border: 2px solid #ff6b6b;
+        }
+        
+        .demo-good {
+            background-color: #fff;
+            border: 2px solid #51cf66;
+        }
+        
+        .demo-bad h3 {
+            font-family: "Comic Sans MS", cursive;
+            font-size: 1.8rem;
+            color: #ff6b6b;
+            line-height: 1;
+            margin-bottom: 1rem;
+        }
+        
+        .demo-good h3 {
+            font-family: "Georgia", serif;
+            font-size: 2rem;
+            color: #2b8a3e;
+            line-height: 1.2;
+            margin-bottom: 1rem;
+        }
+        
+        .demo-bad p {
+            font-size: 14px;
+            line-height: 1.2;
+            color: #333;
+            font-family: Arial, sans-serif;
+        }
+        
+        .demo-good p {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            color: #333;
+            font-family: "Helvetica Neue", Arial, sans-serif;
+        }
+        
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+        
+        .feature-card {
+            padding: 2rem;
+            text-align: center;
+            border-radius: 8px;
+            transition: transform 0.3s ease;
+            background: white;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: var(--typography-primary);
+        }
+        
+        .cta-section {
+            text-align: center;
+            padding: 3rem 1rem;
+            margin: 3rem 0;
+        }
+        
+        .cta-button {
+            font-size: 1.2rem;
+            padding: 1rem 2rem;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 2rem 1rem;
+            margin-top: 3rem;
+            border-top: 1px solid #dee2e6;
+            color: var(--typography-light);
+        }
+    </style>
+</head>
+<body>
+    <nav class="container-fluid">
+        <ul>
+            <li><a href="../mainpage/mainpage.html"><strong>dst45TestSite</strong></a></li>
+        </ul>
+        <ul>
+            <li><a href="../fundamentum/fundamentum.html">Основы</a></li>
+            <li><a href="../techs/techs.html">Технологии</a></li>
+            <li><a href="../practice/practice.html">Практика</a></li>
+            <li><a href="../resourses/resourses.html">Ресурсы</a></li>
+        </ul>
+    </nav>
+
+    <main class="container">
+        <!-- Герой-секция -->
+        <section class="hero">
+            <h1>Типографика — <span style="color: var(--typography-primary);">голос</span> вашего сайта</h1>
+            <p>Искусство веб-типографики превращает обычный текст в мощный инструмент коммуникации. Узнайте, как правильно работать со шрифтами для создания удобных и красивых интерфейсов.</p>
+            <a href="#основы" role="button" class="cta-button">Начните с основ</a>
+        </section>
+
+        <!-- Демонстрация до/после -->
+        <section class="demo-section" id="демо">
+            <h2>Почему это важно?</h2>
+            <p>Сравните два подхода к оформлению текста:</p>
+            
+            <div class="demo-comparison">
+                <div class="demo-bad">
+                    <h3>Плохая типографика</h3>
+                    <p>Этот текст сложно читать из-за неправильного выбора шрифта, маленького размера и недостаточного межстрочного расстояния. Буквы расположены слишком близко, а контраст слабый.</p>
+                    <p>Заголовок плохо выделяется, и вся композиция выглядит непрофессионально.</p>
+                </div>
+                
+                <div class="demo-good">
+                    <h3>Хорошая типографика</h3>
+                    <p>Этот текст легко читается благодаря правильному подбору шрифтовой пары, оптимальному размеру и гармоничному межстрочному расстоянию.</p>
+                    <p>Четкая иерархия помогает ориентироваться в содержании, а приятное оформление улучшает впечатление от сайта.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Карта сайта -->
+        <section id="основы">
+            <h2>Изучите веб-типографику шаг за шагом</h2>
+            <p>Наш гид проведет вас от базовых понятий к продвинутым техникам:</p>
+            
+            <div class="feature-grid">
+                <article class="feature-card">
+                    <div class="feature-icon">A</div>
+                    <h3>Основы типографики</h3>
+                    <p>Узнайте о классификации шрифтов, их анатомии и основных принципах построения гармоничной текстовой композиции.</p>
+                    <a href="#шрифты" role="button" class="secondary">Изучить основы</a>
+                </article>
+                
+                <article class="feature-card">
+                    <div class="feature-icon">📊</div>
+                    <h3>Иерархия и композиция</h3>
+                    <p>Научитесь создавать четкую структуру контента с помощью размера, насыщенности и других инструментов типографики.</p>
+                    <a href="#иерархия" role="button" class="secondary">Узнать больше</a>
+                </article>
+                
+                <article class="feature-card">
+                    <div class="feature-icon">👁️</div>
+                    <h3>Читаемость и доступность</h3>
+                    <p>Сделайте ваш текст удобочитаемым для всех пользователей, включая людей с ограниченными возможностями.</p>
+                    <a href="#читаемость" role="button" class="secondary">Подробнее</a>
+                </article>
+            </div>
+            
+            <div class="feature-grid">
+                <article class="feature-card">
+                    <div class="feature-icon">🌐</div>
+                    <h3>Веб-шрифты</h3>
+                    <p>Освойте технологии подключения и использования шрифтов в веб-разработке для кросс-платформенной совместимости.</p>
+                    <a href="#веб-шрифты" role="button" class="secondary">Изучить технологии</a>
+                </article>
+                
+                <article class="feature-card">
+                    <div class="feature-icon">⚡</div>
+                    <h3>Переменные шрифты</h3>
+                    <p>Познакомьтесь с современной технологией, которая позволяет использовать один файл шрифта для множества вариаций.</p>
+                    <a href="#переменные-шрифты" role="button" class="secondary">Узнать о новинках</a>
+                </article>
+                
+                <article class="feature-card">
+                    <div class="feature-icon">🎨</div>
+                    <h3>Практика и инструменты</h3>
+                    <p>Поэкспериментируйте с нашим интерактивным конструктором и получите готовые CSS-решения для ваших проектов.</p>
+                    <a href="#практика" role="button" class="secondary">Начать практику</a>
+                </article>
+            </div>
+        </section>
+
+        <!-- Призыв к действию -->
+        <section class="cta-section">
+            <h2>Готовы улучшить типографику вашего сайта?</h2>
+            <p>Начните с основ и постепенно осваивайте более сложные техники под руководством наших материалов.</p>
+            <a href="fundamentum.html" role="button" class="cta-button">Начать обучение</a>
+        </section>
+    </main>
+
+    <footer class="container">
+        <small>© 2025 dst45TestSite</small>
+    </footer>
+</body>
+</html>

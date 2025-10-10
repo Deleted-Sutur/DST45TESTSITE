@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>dst45TestSite - Главная</title>
+    <meta name="description" content="Изучите основы веб-типографики. Шрифты, иерархия, читаемость и современные технологии для вашего сайта.">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1.5.10/css/pico.min.css">
+    <style>
+        :root {
+            --typography-primary: #0066cc;
+            --typography-secondary: #333333;
+            --typography-light: #666666;
+        }
+
+        *{
+            margin:0;
+            padding:0;
+        }
+
+        /* Стили для навигации и бургер-меню */
+        nav.container-fluid {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        /* Бургер-кнопка */
+        .burger-btn {
+            display: none;
+            flex-direction: column;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0.5rem;
+            margin: 0;
+        }
+
+        .burger-line {
+            width: 24px;
+            height: 2px;
+            background: var(--pico-color);
+            margin: 2px 0;
+            transition: 0.3s;
+            border-radius: 1px;
+        }
+
+        /* Мобильное меню */
+        .mobile-menu {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: var(--pico-background-color);
+            transform: translateX(-100%);
+            transition: transform 0.3s ease-in-out;
+            z-index: 999;
+            padding: 2rem;
+            box-shadow: var(--pico-card-box-shadow);
+        }
+
+        .mobile-nav-list {
+            list-style: none;
+            padding: 0;
+            margin: 4rem 0 0 0;
+        }
+
+        .mobile-nav-item {
+            margin-bottom: 1rem;
+        }
+
+        .mobile-nav-link {
+            display: block;
+            padding: 1rem 0;
+            border-bottom: 1px solid var(--pico-muted-border-color);
+            text-decoration: none;
+            color: var(--pico-color);
+            font-size: 1.1rem;
+            transition: color 0.3s ease;
+        }
+
+        .mobile-nav-link:hover {
+            color: var(--pico-primary);
+            background: none;
+        }
+
+        /* Активные состояния */
+        .mobile-menu.active {
+            transform: translateX(0);
+        }
+
+        .burger-btn.active .burger-line:nth-child(1) {
+            transform: rotate(45deg) translate(6px, 6px);
+        }
+
+        .burger-btn.active .burger-line:nth-child(2) {
+            opacity: 0;
+        }
+
+        .burger-btn.active .burger-line:nth-child(3) {
+            transform: rotate(-45deg) translate(6px, -6px);
+        }
+
+        /* Оверлей */
+        .mobile-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            opacity: 0;
+            visibility: hidden;
+            transition: 0.3s;
+            z-index: 998;
+        }
+
+        .mobile-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Адаптивность */
+        @media (max-width: 768px) {
+            .burger-btn {
+                display: flex;
+            }
+
+            .desktop-menu {
+                display: none;
+            }
+        }
+        
+        .headtext {
+            padding: 4rem 1rem;
+            text-align: center;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            margin-bottom: 3rem;
+        }
+        
+        .headtext h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--typography-secondary);
+            line-height: 1.1;
+        }
+        
+        .headtext p {
+            font-size: 1.4rem;
+            color: var(--typography-light);
+            max-width: 800px;
+            margin: 0 auto 2rem;
+            line-height: 1.6;
+        }
+
+        @media (max-width: 768px) {
+            .demo-comparison {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 3rem;
+            margin: 3rem 0;
+        }
+        
+        .feature-card {
+            padding: 1rem;
+            text-align: center;
+            border-radius: 8px;
+            transition: transform 0.3s ease;
+            background: white;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            height: 350px;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: var(--typography-primary);
+        }
+        
+        .feature-text h3 {
+            flex-grow: 1;
+            color: var(--typography-light);
+            margin-bottom: 1rem;
+        }
+
+        .feature-text p {
+            flex-grow: 1;
+            color: var(--typography-light);
+            margin-bottom: 1rem;
+        }
+        
+        .feature-button {
+            margin-top: auto;
+            margin-bottom: 1rem;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 2rem 1rem;
+            margin-top: 3rem;
+            border-top: 1px solid #dee2e6;
+            color: var(--typography-light);
+        }
+    </style>
+</head>
+<body>
+     <nav class="container-fluid">
+            <ul>
+                <li><a href="../../index.html"><strong>dst45TestSite</strong></a></li>
+            </ul>
+            
+            <!-- Десктопное меню -->
+            <ul>
+                <li><a href="../fundamentum/fundamentum.html">Основы</a></li>
+                <li><a href="../practice/practice.html">Практика</a></li>
+                <li><a href="../resourses/resourses.html">Ресурсы</a></li>
+            </ul>
+
+            <!-- Бургер-кнопка -->
+            <button class="burger-btn" id="burgerButton">
+                <span class="burger-line"></span>
+                <span class="burger-line"></span>
+                <span class="burger-line"></span>
+            </button>
+    </nav>
+
+    <!-- Мобильное меню -->
+    <div class="mobile-menu" id="mobileMenu">
+        <ul class="mobile-nav-list">
+            <li class="mobile-nav-item">
+                <a href="../../mainpage/mainpage.html" class="mobile-nav-link">Главная</a>
+            </li>
+            <li class="mobile-nav-item">
+                <a href="../../fundamentum/fundamentum.html" class="mobile-nav-link">Основы</a>
+            </li>
+            <li class="mobile-nav-item">
+                <a href="../../practice/practice.html" class="mobile-nav-link">Практика</a>
+            </li>
+            <li class="mobile-nav-item">
+                <a href="../../resourses/resourses.html" class="mobile-nav-link">Ресурсы</a>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Оверлей для мобильного меню -->
+    <div class="mobile-overlay" id="mobileOverlay"></div>
+
+    <main class="container">
+        <section>
+            <h1>Статьи о разных аспектах типографики</h1>
+            <div class="feature-grid">
+                <article class="feature-card">
+                    <div class="feature-icon">.ttf</div>
+                    <div class="feature-text">
+                        <h3>Шрифты и их анатомия</h3>
+                    </div>
+                    <div class = "feature-button"><a href="fontanatomy/fontanatomy.html" role="button" class="secondary">Читать</a></div>
+                </article>
+                
+                <article class="feature-card">
+                    <div class="feature-icon">🎨</div>
+                    <div class="feature-text">
+                        <h3>Иерархия и композиция</h3>
+                    </div>
+                    <div class = "feature-button"><a href="composition/composition.html" role="button" class="secondary">Читать</a></div>
+                </article>
+                
+                <article class="feature-card">
+                    <div class="feature-icon">👁️</div>
+                    <div class="feature-text">
+                        <h3>Читаемость и доступность</h3>
+                    </div>
+                    <div class = "feature-button"><a href="readable/readable.html" role="button" class="secondary">Читать</a></div>
+                </article>
+
+                <article class="feature-card">
+                    <div class="feature-icon">🌐</div>
+                    <div class="feature-text">
+                        <h3>Веб-шрифты</h3>
+                    </div>
+                    <div class = "feature-button"><a href="webfonts/webfonts.html" role="button" class="secondary">Читать</a></div>
+                </article>
+
+                <article class="feature-card">
+                    <div class="feature-icon">𝐀𝐚</div>
+                    <div class="feature-text">
+                        <h3>Переменные шрифты</h3>
+                    </div>
+                    <div class = "feature-button"><a href="variablefonts/variablefonts.html" role="button" class="secondary">Читать</a></div>
+                </article>
+            </div>
+        </section>
+    </main>
+
+    <footer class="container">
+        <small>© 2025 dst45TestSite</small>
+    </footer>
+
+    <script>
+        // Бургер-меню
+        class BurgerMenu {
+            constructor() {
+                this.burgerButton = document.getElementById('burgerButton');
+                this.mobileMenu = document.getElementById('mobileMenu');
+                this.overlay = document.getElementById('mobileOverlay');
+                this.navLinks = document.querySelectorAll('.mobile-nav-link');
+                
+                this.init();
+            }
+
+            init() {
+                // Обработчик клика по бургер-кнопке
+                this.burgerButton.addEventListener('click', () => {
+                    this.toggleMenu();
+                });
+
+                // Обработчик клика по оверлею
+                this.overlay.addEventListener('click', () => {
+                    this.closeMenu();
+                });
+
+                // Обработчики клика по ссылкам меню
+                this.navLinks.forEach(link => {
+                    link.addEventListener('click', () => {
+                        this.closeMenu();
+                    });
+                });
+
+                // Закрытие меню при нажатии Escape
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === 'Escape') {
+                        this.closeMenu();
+                    }
+                });
+
+                // Закрытие меню при изменении размера окна на десктоп
+                window.addEventListener('resize', () => {
+                    if (window.innerWidth > 768) {
+                        this.closeMenu();
+                    }
+                });
+            }
+
+            toggleMenu() {
+                this.burgerButton.classList.toggle('active');
+                this.mobileMenu.classList.toggle('active');
+                this.overlay.classList.toggle('active');
+                
+                // Блокировка скролла тела страницы
+                document.body.style.overflow = this.mobileMenu.classList.contains('active') ? 'hidden' : '';
+            }
+
+            closeMenu() {
+                this.burgerButton.classList.remove('active');
+                this.mobileMenu.classList.remove('active');
+                this.overlay.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+        }
+
+        // Инициализация бургер-меню при загрузке DOM
+        document.addEventListener('DOMContentLoaded', () => {
+            new BurgerMenu();
+        });
+    </script>
+</body>
+</html>
