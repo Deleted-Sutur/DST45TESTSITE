@@ -258,32 +258,7 @@
                 <li><a href="../practice/practice.html">Практика</a></li>
                 <li><a href="../resourses/resourses.html">Ресурсы</a></li>
             </ul>
-
-            <button class="burger-btn" id="burgerButton">
-                <span class="burger-line"></span>
-                <span class="burger-line"></span>
-                <span class="burger-line"></span>
-            </button>
     </nav>
-
-    <div class="mobile-menu" id="mobileMenu">
-        <ul class="mobile-nav-list">
-            <li class="mobile-nav-item">
-                <a href="../mainpage/mainpage.html" class="mobile-nav-link">Главная</a>
-            </li>
-            <li class="mobile-nav-item">
-                <a href="../fundamentum/fundamentum.html" class="mobile-nav-link">Основы</a>
-            </li>
-            <li class="mobile-nav-item">
-                <a href="../practice/practice.html" class="mobile-nav-link">Практика</a>
-            </li>
-            <li class="mobile-nav-item">
-                <a href="../resourses/resourses.html" class="mobile-nav-link">Ресурсы</a>
-            </li>
-        </ul>
-    </div>
-
-    <div class="mobile-overlay" id="mobileOverlay"></div>
 
     <main class="container">
         <section class="typography-trainer">
@@ -472,7 +447,6 @@
             }
 
             initElements() {
-                // Основные элементы управления
                 this.fontOptions = document.querySelectorAll('.font-option');
                 this.previewArea = document.getElementById('previewArea');
                 this.variableControls = document.getElementById('variableControls');
@@ -480,7 +454,6 @@
                 this.statusMessage = document.getElementById('statusMessage');
                 this.updateButton = document.getElementById('updateButton');
 
-                // Ползунки
                 this.fontSize = document.getElementById('fontSize');
                 this.fontSizeValue = document.getElementById('fontSizeValue');
                 this.lineHeight = document.getElementById('lineHeight');
@@ -490,7 +463,6 @@
                 this.fontWeight = document.getElementById('fontWeight');
                 this.fontWeightValue = document.getElementById('fontWeightValue');
 
-                // Переменные параметры
                 this.fontWidth = document.getElementById('fontWidth');
                 this.fontWidthValue = document.getElementById('fontWidthValue');
                 this.opticalSize = document.getElementById('opticalSize');
@@ -500,23 +472,19 @@
                 this.fontGrade = document.getElementById('fontGrade');
                 this.fontGradeValue = document.getElementById('fontGradeValue');
 
-                // Дополнительные параметры
                 this.textColor = document.getElementById('textColor');
                 this.textAlign = document.getElementById('textAlign');
 
-                // Элементы предпросмотра
                 this.demoHeading = document.getElementById('demoHeading');
                 this.demoSubheading = document.getElementById('demoSubheading');
                 this.demoBody = document.getElementById('demoBody');
                 this.demoBody2 = document.querySelectorAll('.demo-body')[1];
                 this.demoCaption = document.getElementById('demoCaption');
 
-                // Инициализируем значения ползунков
                 this.updateSliderValues();
             }
 
             bindEvents() {
-                // Выбор шрифта
                 this.fontOptions.forEach(option => {
                     option.addEventListener('click', () => {
                         this.fontOptions.forEach(opt => opt.classList.remove('active'));
@@ -528,19 +496,16 @@
                     });
                 });
 
-                // Основные ползунки
                 this.fontSize.addEventListener('input', () => this.updateSliderValue(this.fontSize, this.fontSizeValue, 'px'));
                 this.lineHeight.addEventListener('input', () => this.updateSliderValue(this.lineHeight, this.lineHeightValue));
                 this.letterSpacing.addEventListener('input', () => this.updateSliderValue(this.letterSpacing, this.letterSpacingValue, 'px'));
                 this.fontWeight.addEventListener('input', () => this.updateSliderValue(this.fontWeight, this.fontWeightValue));
 
-                // Переменные ползунки
                 this.fontWidth.addEventListener('input', () => this.updateSliderValue(this.fontWidth, this.fontWidthValue));
                 this.opticalSize.addEventListener('input', () => this.updateSliderValue(this.opticalSize, this.opticalSizeValue));
                 this.fontSlant.addEventListener('input', () => this.updateSliderValue(this.fontSlant, this.fontSlantValue));
                 this.fontGrade.addEventListener('input', () => this.updateSliderValue(this.fontGrade, this.fontGradeValue));
 
-                // Дополнительные параметры
                 this.textColor.addEventListener('input', () => {
                     this.showStatus('Изменен цвет текста', 'info');
                 });
@@ -548,19 +513,16 @@
                     this.showStatus('Изменено выравнивание', 'info');
                 });
 
-                // Кнопка обновления
                 this.updateButton.addEventListener('click', () => {
                     this.applyChanges();
                 });
 
-                // Пресеты
                 document.querySelectorAll('[data-preset]').forEach(button => {
                     button.addEventListener('click', () => {
                         this.applyPreset(button.dataset.preset);
                     });
                 });
 
-                // Сброс
                 document.getElementById('resetButton').addEventListener('click', () => {
                     this.resetToDefaults();
                 });
@@ -599,10 +561,8 @@
             }
 
             applyChanges() {
-                // Показываем анимацию обновления
                 this.previewArea.classList.add('updating');
                 
-                // Основные стили
                 const styles = {
                     fontFamily: `'${this.currentFont}', sans-serif`,
                     fontSize: this.fontSize.value + 'px',
@@ -613,24 +573,20 @@
                     textAlign: this.textAlign.value
                 };
 
-                // Применяем стили ко всем элементам предпросмотра
                 const elements = [this.demoHeading, this.demoSubheading, this.demoBody, this.demoBody2, this.demoCaption];
                 elements.forEach(el => {
                     Object.assign(el.style, styles);
                 });
 
-                // Для переменных шрифтов добавляем специальные настройки
                 if (this.fontType === 'variable') {
                     const variationSettings = {};
                     
-                    // Добавляем все оси с правильными значениями
                     variationSettings.wght = this.fontWeight.value;
                     variationSettings.wdth = this.fontWidth.value;
                     variationSettings.opsz = this.opticalSize.value;
                     variationSettings.GRAD = this.fontGrade.value;
                     variationSettings.slnt = this.fontSlant.value;
 
-                    // Создаем строку для font-variation-settings
                     const variationString = Object.entries(variationSettings)
                         .map(([axis, value]) => `'${axis}' ${value}`)
                         .join(', ');
@@ -649,7 +605,6 @@
                 this.updateCSSOutput(styles);
                 this.showStatus('Изменения успешно применены!', 'success');
                 
-                // Убираем анимацию через короткое время
                 setTimeout(() => {
                     this.previewArea.classList.remove('updating');
                 }, 500);
@@ -739,14 +694,12 @@
                 const preset = presets[presetName];
                 if (!preset) return;
 
-                // Активируем соответствующий шрифт
                 this.fontOptions.forEach(option => {
                     if (option.dataset.font === preset.font) {
                         option.click();
                     }
                 });
 
-                // Устанавливаем значения
                 this.setSliderValue(this.fontSize, preset.fontSize);
                 this.setSliderValue(this.lineHeight, preset.lineHeight);
                 this.setSliderValue(this.letterSpacing, preset.letterSpacing);
@@ -776,7 +729,6 @@
             }
 
             resetToDefaults() {
-                // Сброс к начальным значениям
                 this.setSliderValue(this.fontSize, 16);
                 this.setSliderValue(this.lineHeight, 1.6);
                 this.setSliderValue(this.letterSpacing, 0);
@@ -789,7 +741,6 @@
                 this.textColor.value = '#333333';
                 this.textAlign.value = 'left';
 
-                // Активируем первый шрифт
                 this.fontOptions[0].click();
 
                 this.showStatus('Настройки сброшены к значениям по умолчанию', 'info');
@@ -797,10 +748,9 @@
             }
         }
 
-        // Инициализация тренажёра при загрузке страницы
         document.addEventListener('DOMContentLoaded', () => {
             const trainer = new TypographyTrainer();
-            // Применяем начальные настройки
+
             setTimeout(() => {
                 trainer.applyChanges();
             }, 100);
@@ -809,3 +759,4 @@
 </body>
 
 </html>
+
